@@ -1,0 +1,44 @@
+body {
+    background-color: rgb(230, 230, 230);
+}
+
+h1 {
+    position: relative;
+    margin: 0px;
+    padding: 100px 0px 0px 0px;
+    /* background-color: red; */
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 100px;
+    font-weight: 5000;
+    text-align: center;
+}
+
+h3 {
+    position: relative;
+    margin: 0px 0px 40px 0px;
+    font-size: 40px;
+    font-family: 'Times New Roman', Times, serif;
+    text-align: center;
+}
+
+body .enterYourName {
+    position: relative;
+    margin: 0px 0px 10px 0px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 40px;
+    text-align: center;
+}
+
+body .startTrading {
+    position: relative;
+    margin: 0px 0px 0px 0px;
+    text-align: center;
+}
+
+body .startTradingBtn {
+    position: relative;
+    padding: 20px 100px 20px 100px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 30px;
+}
+
