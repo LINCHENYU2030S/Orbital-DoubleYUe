@@ -1,8 +1,33 @@
 <!DOCTYPE html>
-<html>
-    <body>
-        <h1>Hello, World!</h1>  
-        <h2>Yo, What's Up</h2>  
-        <h3>lol world</h3>  
-    </body>
+<html lang="en">
+<head>
+    <script>
+        function passVal() {
+            var name = document.getElementById("name").value;
+            localStorage.setItem("textVal", name);
+            return false;
+        }
+    </script>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoubleYUe</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <h1>DoubleYUe</h1>
+    <h3>Trading Simulator</h3>
+    <div class="enterYourName">
+        <input id="name" class="enterYourName" type="text" placeholder="Enter your name">
+    </div>
+    <div class="startTrading">
+        <form action="dashboard.html">
+            <button class="startTradingBtn" onclick="passVal();">Start Trading</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>
