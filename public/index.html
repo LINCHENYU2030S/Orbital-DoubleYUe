@@ -1,33 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <script>
-        function passVal() {
-            var name = document.getElementById("name").value;
-            localStorage.setItem("textVal", name);
-            return false;
-        }
-    </script>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Trading Simulator</title>
+        <style>
+          body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-image: url(background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
+    height: 100vh;
+  }
+  
+  nav {
+    background-color: #333;
+  }
+  
+  nav ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    overflow: hidden;
+  }
+  
+  nav li {
+    float: left;
+  }
+  
+  nav a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+  
+  nav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  
+  /* Additional styling for a more appealing design */
+  h1 {
+    text-align: center;
+    margin-top: 50px;
+    color: yellow
+  }
+  
+  p {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+  }
 
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DoubleYUe</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
+  @media screen and (min-width: 768px) {
+  body {
+    background-position: center center;
+  }
+}
+        </style>
+    </head>
 
-<body>
-    <h1>DoubleYUe</h1>
-    <h3>Trading Simulator</h3>
-    <div class="enterYourName">
-        <input id="name" class="enterYourName" type="text" placeholder="Enter your name">
-    </div>
-    <div class="startTrading">
-        <form action="dashboard.html">
-            <button class="startTradingBtn" onclick="passVal();">Start Trading</button>
-        </form>
-    </div>
+    <body>
+        <nav>
+            <ul>
+              <li class="logged-out">
+                <a href="login.html" data-target="modal-signin">Sign In</a>
+              </li>
+              <li class="logged-out">
+                <a href="signup.html" data-target="modal-signout">Sign Up</a>
+              </li>
+              <li>
+                <a href="#">About Us</a>
+              </li>
+            </ul>
+          </nav>
 
-    <script src="script.js"></script>
-</body>
+          <div>
+            <h1>Welcome to DoubleYUe Trading Simulator!</h1>
+            <p>
+
+            </p>
+          </div>
+
+    </body> 
+
 </html>
