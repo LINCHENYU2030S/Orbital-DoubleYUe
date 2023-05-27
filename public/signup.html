@@ -16,7 +16,7 @@
     <style>
         body {
             background-color: rgb(230, 230, 230);
-            background-image: url(background.jpg);
+            background-image: url(img/backgroundimg.jpg);
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center top;
@@ -81,7 +81,22 @@
 
         }
 
-    
+        .input-container label {
+            color:white;
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .input-container input {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
 
         .legend {
             color:antiquewhite;
@@ -112,9 +127,14 @@
         <form action="login.html">
             <fieldset>
                 <legend class = "legend">SIGN UP</legend>
-                <input id="name" type="text" placeholder="Enter your email address">
-                <input id="name" type="text" placeholder="Enter your password">
-                <input id="name" type="text" placeholder="Confirm your password">
+                <div class="input-container">
+                    <label for="email">Email Address: </label>
+                    <input id="email" type="text" placeholder="Enter your email address" required>
+                    <label for="password1">Your password: </label>
+                    <input id="password1" type="password" placeholder="Enter your password" required>
+                    <label for="password2">Your password again: </label>
+                    <input id="password2" type="password" placeholder="Confirm your password" required>
+                </div>
             </fieldset>
             <button class="startTradingBtn">Sign Up Now</button>
         </form>
