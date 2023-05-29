@@ -68,24 +68,60 @@
 
 <body>
   <nav>
-            <ul>
-              <li class="logged-out">
-                <a href="login.html" data-target="modal-signin">Sign In</a>
-              </li>
-              <li class="logged-out">
-                <a href="signup.html" data-target="modal-signout">Sign Up</a>
-              </li>
-              <li>
-                <a href="#">About Us</a>
-              </li>
-            </ul>
+    <ul>
+      <li class="logged-out">
+        <a href="login.html" data-target="modal-signin">Sign In</a>
+      </li>
+      <li class="logged-out">
+        <a href="signup.html" data-target="modal-signout">Sign Up</a>
+      </li>
+      <li>
+        <a href="#">About Us</a>
+      </li>
+    </ul>
   </nav>
 
   <div>
-            <h1>Welcome to DoubleYUe Trading Simulator!</h1>
-            <p>
+    <h1>Welcome to DoubleYUe Trading Simulator!!</h1>
+    <p>
 
-            </p>
+    </p>
   </div>
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getAuth, connectAuthEmulator, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+    
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyBi9h_Rpk9-RUBKRZ_WGHLrdNQ5YEHvJk8",
+      authDomain: "doubleyue-57c46.firebaseapp.com",
+      projectId: "doubleyue-57c46",
+      storageBucket: "doubleyue-57c46.appspot.com",
+      messagingSenderId: "616024099867",
+      appId: "1:616024099867:web:15c57e18d3cc49e3397cbe",
+      measurementId: "G-9EBK7QNX7B"
+    };
+
+    // const firebaseApp = initializeApp(firebaseConfig);
+    // const auth = getAuth(firebaseApp);
+    // const firebaseDB = getFirestore(firebaseApp);
+
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+  
+  </script>
+
+  <script src="auth.js"></script>
+
 </body> 
 </html>

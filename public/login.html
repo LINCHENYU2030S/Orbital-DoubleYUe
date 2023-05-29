@@ -3,7 +3,7 @@
 <head>
     <script>
         function passVal() {
-            var name = document.getElementById("name").value;
+            var name = document.getElementById("email").value;
             localStorage.setItem("textVal", name);
             return false;
         }
@@ -136,7 +136,7 @@
                     <input id="password" type="password" placeholder="Enter your password" required>
                 </div>
             </fieldset>
-            <button class="startTradingBtn">Start Trading</button>
+            <button class="startTradingBtn" onclick="passVal()">Start Trading</button>
         </form>
     </div>
     <div class = "back">

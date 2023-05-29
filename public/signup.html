@@ -3,7 +3,7 @@
 <head>
     <script>
         function passVal() {
-            var name = document.getElementById("name").value;
+            var name = document.getElementById("email").value;
             localStorage.setItem("textVal", name);
             return false;
         }
@@ -124,12 +124,12 @@
     <h1>DoubleYUe</h1>
     <h3>Trading Simulator</h3>
     <div class="startTrading">
-        <form action="login.html">
+        <form id="signup-form" action="login.html">
             <fieldset>
                 <legend class = "legend">SIGN UP</legend>
                 <div class="input-container">
                     <label for="email">Email Address: </label>
-                    <input id="email" type="text" placeholder="Enter your email address" required>
+                    <input id="email" type="email" placeholder="Enter your email address" required>
                     <label for="password1">Your password: </label>
                     <input id="password1" type="password" placeholder="Enter your password" required>
                     <label for="password2">Your password again: </label>
@@ -145,6 +145,7 @@
         </a>
     </div>
 
+    <script src="auth.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
