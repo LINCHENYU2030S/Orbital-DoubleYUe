@@ -8,13 +8,14 @@ import { getDatabase } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-d
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyBUQLtvXzo0rvvWeBrj_Gd2X8dbw_5NJNs",
-    authDomain: "tradingsimulator-ff1ab.firebaseapp.com",
-    projectId: "tradingsimulator-ff1ab",
-    storageBucket: "tradingsimulator-ff1ab.appspot.com",
-    messagingSenderId: "981457221998",
-    appId: "1:981457221998:web:5ad38a21134505e42da97f",
-    measurementId: "G-WD0WKZ588R"
+    apiKey: "AIzaSyBi9h_Rpk9-RUBKRZ_WGHLrdNQ5YEHvJk8",
+    authDomain: "doubleyue-57c46.firebaseapp.com",
+    databaseURL: "https://doubleyue-57c46-default-rtdb.firebaseio.com",
+    projectId: "doubleyue-57c46",
+    storageBucket: "doubleyue-57c46.appspot.com",
+    messagingSenderId: "616024099867",
+    appId: "1:616024099867:web:15c57e18d3cc49e3397cbe",
+    measurementId: "G-9EBK7QNX7B"
 };
 
 // Initialize Firebase
