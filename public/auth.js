@@ -62,7 +62,7 @@ signupForm.addEventListener('submit', (e) => {
         });
 });
 
-const loginForm = document.querySelector('#signin-form');
+/*const loginForm = document.querySelector('#signin-form');
 
 loginForm.addEventListener('submit', (e) => {
     var email = document.getElementById('email').value;
@@ -82,4 +82,4 @@ loginForm.addEventListener('submit', (e) => {
 
             alert(errorMessage);
         });
-});
+});*/
