@@ -9,10 +9,13 @@
         }
     </script>
 
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DoubleYUe-SIGN UP</title>
+
+    <!--CSS STYLING PART-->
     <style>
         body {
             background-color: rgb(230, 230, 230);
@@ -49,14 +52,6 @@
             margin:0px 0px 300px 0px;
             text-align: center;
         }
-
-        /*body .enterYourName {
-            position: relative;
-            margin: 0px 0px 10px 0px;
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 40px;
-            text-align: center;
-        }*/
 
         body .startTrading {
             position: relative;
@@ -120,11 +115,12 @@
     </style>
 </head>
 
+<!--HTML CONTENT-->
 <body>
     <h1>DoubleYUe</h1>
     <h3>Trading Simulator</h3>
     <div class="startTrading">
-        <form action="login.html">
+        <form id="signup-form">
             <fieldset>
                 <legend class = "legend">SIGN UP</legend>
                 <div class="input-container">
@@ -136,7 +132,7 @@
                     <input id="password2" type="password" placeholder="Confirm your password" required>
                 </div>
             </fieldset>
-            <button class="startTradingBtn">Sign Up Now</button>
+            <button class="startTradingBtn" type="submit">Sign Up Now</button>
         </form>
     </div>
     <div class = "back">
@@ -145,6 +141,7 @@
         </a>
     </div>
 
-    <script src="script.js"></script>
+    <script type = "module" src="auth.js"></script>
+
 </body>
 </html>
