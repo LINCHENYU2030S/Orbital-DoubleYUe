@@ -146,7 +146,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
         import { getDatabase } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
@@ -198,7 +198,11 @@
                     const errorCode = error.code;
                     const errorMessage = error.message;
                     // ..
-                    alert("signup failed" + errorCode + errorMessage);
+
+                    if (errorCode == "auth/email-already-in-use") {
+                        alert("User already exists!");
+                    }
+                    // alert("signup failed" + errorCode + errorMessage);
                     console.log(errorCode + errorMessage);
                 });
         });
