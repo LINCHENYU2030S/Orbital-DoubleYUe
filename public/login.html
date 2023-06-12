@@ -194,7 +194,14 @@
                     const errorCode = error.code;
                     const errorMessage = error.message;
 
-                    alert("login failed " + errorCode + " " + errorMessage);
+                    if (errorCode == "auth/user-not-found") {
+                        alert("User does not exist");
+                    } else if (errorCode == "auth/wrong-password") {
+                        alert("Incorrect Password!");
+                    }
+
+                    // For debugging purposes
+                    // alert("login failed " + errorCode + " " + errorMessage);
                     console.log(errorCode + errorMessage);
                 });
         }); 
