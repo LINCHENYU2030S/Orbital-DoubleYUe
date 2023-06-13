@@ -1,0 +1,78 @@
+body {
+    background-color: rgb(230, 230, 230);
+    background-image: url(img/backgroundimg.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
+    height: 100vh;
+}
+
+.doubleyue-trading-simulator {
+    position: relative;
+    padding: 10px;
+	color: #f4eb49;
+    background: #000000;
+	border-color: #000000;
+    border-width: 1px;
+	border-style: solid;
+	font-family: "Source Sans 3";
+	font-weight: 600;
+	font-size: 30px;
+	text-align:center;
+}
+
+.sidebar {
+    width: 170px;
+    height: 100%;
+    background: #232323;
+    /* border-style: solid; */
+    display: flex;
+    text-align: center;
+}
+
+.sidebar-buttons {
+    width: 100%;
+    text-align: center;
+}
+
+.sidebar-buttons ul {
+    list-style: none;
+}
+
+.sidebar-buttons ul li {
+    list-style: none;
+}
+
+.sidebar-buttons ul li a {
+    /* padding: 10px 10px 10px 10px; */
+    text-decoration: none;
+    display: list-item;
+    /* background-color: aliceblue; */
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 20px;
+    color:aliceblue;
+    /* border-top: 0.1px solid black;
+    border-bottom: 0.1px solid black; */
+}
+
+.sidebar-buttons ul li a:link { /* unvisited link */
+    text-decoration: none; 
+} 
+.sidebar-buttons ul li a:visited { /* visited link */
+    text-decoration: none; 
+}
+.sidebar-buttons ul li a:hover { /* cursor over link */
+    background-color: #f4eb49;
+    color: red;
+    transition: 0.5s;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.sidebar-buttons ul li a:active { /* moment link clicked */
+    color: red;
+}
+
+a { /* cursor becomes pointer while hovering */
+    cursor: pointer;
+}
