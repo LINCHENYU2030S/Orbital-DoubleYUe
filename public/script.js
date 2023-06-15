@@ -11,7 +11,9 @@ tabs.forEach(tab => {
         });
         tabs.forEach(tab => {
             tab.classList.remove('active');
+            tab.classList.add('unactive');
         });
+        tab.classList.remove('unactive');
         tab.classList.add('active');
         target.classList.add('active');
     });

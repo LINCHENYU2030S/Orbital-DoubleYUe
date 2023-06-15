@@ -43,8 +43,7 @@ body {
     list-style: none;
 }
 
-.sidebar-buttons ul li a {
-    /* padding: 10px 10px 10px 10px; */
+.sidebar-buttons .tab {
     text-decoration: none;
     display: list-item;
     /* background-color: aliceblue; */
@@ -53,29 +52,25 @@ body {
     font-size: 20px;
     color:aliceblue;
     border: 2px solid #232323;
-    /* border-top: 0.1px solid black;
-    border-bottom: 0.1px solid black; */
 }
 
-.sidebar-buttons ul li a:link { /* unvisited link */
-    text-decoration: none; 
-} 
-.sidebar-buttons ul li a:visited { /* visited link */
-    text-decoration: none; 
+.sidebar-buttons .tab.active {
+    color: #f4eb49;
+    background-color: #000000;
+    border: 2px solid yellow;
 }
-.sidebar-buttons ul li a:hover { /* cursor over link */
+
+.sidebar-buttons .tab.active:hover {
+    cursor: default;
+}
+
+.sidebar-buttons .tab.unactive:hover { /* cursor over link */
+    cursor: pointer;
     background-color: #f4eb49;
     color: red;
     transition: 0.5s;
     letter-spacing: 1px;
     text-transform: uppercase;
-}
-.sidebar-buttons ul li a:active { /* moment link clicked */
-    color: red;
-}
-
-a { /* cursor becomes pointer while hovering */
-    cursor: pointer;
 }
 
 .tab-content {
@@ -84,7 +79,7 @@ a { /* cursor becomes pointer while hovering */
     position: absolute;
     left: 800px;
     top: 160px;
-}
+} 
 
 [data-tab-content] {
     display: none;
@@ -92,10 +87,4 @@ a { /* cursor becomes pointer while hovering */
 
 .active[data-tab-content] {
     display: block;
-}
-
-.tab.active {
-    color: #f4eb49;
-    background-color: #000000;
-    border: 2px solid yellow;
 }
