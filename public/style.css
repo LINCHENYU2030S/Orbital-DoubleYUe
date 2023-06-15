@@ -81,6 +81,9 @@ a { /* cursor becomes pointer while hovering */
 .tab-content {
     font-size: 40px;
     color: aliceblue;
+    position: absolute;
+    left: 800px;
+    top: 160px;
 }
 
 [data-tab-content] {
