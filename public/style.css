@@ -52,6 +52,7 @@ body {
     padding: 30px 20px;
     font-size: 20px;
     color:aliceblue;
+    border: 2px solid #232323;
     /* border-top: 0.1px solid black;
     border-bottom: 0.1px solid black; */
 }
@@ -75,4 +76,23 @@ body {
 
 a { /* cursor becomes pointer while hovering */
     cursor: pointer;
+}
+
+.tab-content {
+    font-size: 40px;
+    color: aliceblue;
+}
+
+[data-tab-content] {
+    display: none;
+}
+
+.active[data-tab-content] {
+    display: block;
+}
+
+.tab.active {
+    color: #f4eb49;
+    background-color: #000000;
+    border: 2px solid yellow;
 }

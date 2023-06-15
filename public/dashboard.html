@@ -18,14 +18,32 @@
 
     <div class="sidebar">
         <nav class="sidebar-buttons">
-        <ul>
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Portfolio</a></li>
-            <li><a href="#">Trade</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Guide</a></li>
+        <ul class="tabs">
+            <li><a href="#" data-tab-target="#dashboard" class="active tab">Dashboard</a></li>
+            <li><a href="#" data-tab-target="#portfolio" class="tab">Portfolio</a></li>
+            <li><a href="#" data-tab-target="#trade" class="tab">Trade</a></li>
+            <li><a href="#" data-tab-target="#settings" class="tab">Settings</a></li>
+            <li><a href="#" data-tab-target="#guide" class="tab">Guide</a></li>
         </ul>
         </nav>
+    </div>
+
+    <div class="tab-content">
+        <div id="dashboard" data-tab-content class="active">
+            <h1>This is the Dashboard section</h1>
+        </div>
+        <div id="portfolio" data-tab-content>
+            <h1>This is the Portfolio section</h1>
+        </div>
+        <div id="trade" data-tab-content>
+            <h1>This is the Trade section</h1>
+        </div>
+        <div id="settings" data-tab-content>
+            <h1>This is the Settings section</h1>
+        </div>
+        <div id="guide" data-tab-content>
+            <h1>This is the Guide section</h1>
+        </div>
     </div>
     
 
