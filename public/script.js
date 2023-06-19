@@ -18,8 +18,15 @@ tabs.forEach(tab => {
         target.classList.add('active');
 
         if (tab.id == "sidebar-button-guide") {
-            alert(i);
+            // alert(i);
             // guideWindow(1);
+            const guides = document.querySelectorAll('[guide-content]');
+            guides.forEach(guide => {
+                guide.classList.remove('active');
+                guide.classList.add('unactive');
+            });
+
+            i = 1;
             const currGuide = document.getElementById('guide-' + i);
             currGuide.classList.remove('unactive');
             currGuide.classList.add('active');
@@ -30,9 +37,8 @@ tabs.forEach(tab => {
 // guidePart
 const nextBtn = document.getElementById('guide-next-button');
 const backBtn = document.getElementById('guide-back-button');
-const currGuide = document.getElementById('guide-' + i);
-
 nextBtn.addEventListener('click', () => {
+    const currGuide = document.getElementById('guide-' + i);
     if (i < 8) {
         currGuide.classList.remove('active');
         currGuide.classList.add('unactive');
@@ -42,8 +48,8 @@ nextBtn.addEventListener('click', () => {
         nextGuide.classList.add('active');
     }
 });
-
 backBtn.addEventListener('click', () => {
+    const currGuide = document.getElementById('guide-' + i);
     if (i > 1) {
         currGuide.classList.remove('active');
         currGuide.classList.add('unactive');
