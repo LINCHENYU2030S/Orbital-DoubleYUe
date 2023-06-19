@@ -38,9 +38,41 @@
         </div>
 
         <div id="trade" data-tab-content>
-            <h1>This is the Trade section</h1>
-            <div id="trade-popup">
-                Trade Popup Window
+            <!-- <h1>This is the Trade section</h1> -->
+            <div class="trade-window">
+                <div class="title">Place Order</div>
+                <div class="options-container">
+                    <div options class="stock-option">
+                        <label for="stock">Stock: </label>
+                        <input list="stocks" name="stock" id="stock">
+                        <datalist id="stocks">
+                            <option value="Alphabet Inc.">
+                            <option value="Apple Inc.">
+                            <option value="Microsoft">
+                            <option value="Netflix">
+                        </datalist>
+                    </div>
+                    <div options class="size-option">
+                        <label for="">Size: </label>
+                        <input type="number">
+                    </div>
+                    <div options class="stoploss-option">
+                        <label for="">Stop Loss($): </label>
+                        <input type="number">
+                    </div>
+                    <div options class="takeprofit-option">
+                        <label for="">Take Profit($): </label>
+                        <input type="number">
+                    </div>
+                    <div options class="type-option">
+                        <label for="stock-type">Type: </label>
+                        <select id="stock-type">
+                            <option value="long">Long</option>
+                            <option value="short">Short</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="confirm-order-button">Confirm</div>
             </div>
         </div>
 
@@ -58,7 +90,7 @@
                     </div>
                     <div class="title">
                         What is Trading?
-                    </div>
+                    </div><br>
                     <div class="content">
                         Trading, in simple terms, is the act of buying and selling financial instruments (like shares, forex and indices), in the hopes of making a profit from changes in their price movements.
                     </div>
@@ -141,12 +173,12 @@
                     </div>
                 </div>
                 
-                <div id="guide-next-button">
-                    <button>next</button>
+                <div id="guide-next-button" guide-buttons>
+                    Next
                 </div>
 
-                <div id="guide-back-button">
-                    <button>back</button>
+                <div id="guide-back-button" guide-buttons>
+                    Back
                 </div>
             </div>
         </div>
