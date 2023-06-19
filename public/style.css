@@ -77,8 +77,12 @@ body {
     font-size: 40px;
     color: aliceblue;
     position: absolute;
-    left: 800px;
+    left: 300px;
+    right: 300px;
     top: 160px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 60px;
+    border: 2px solid #00fbff;
 } 
 
 [data-tab-content] {
@@ -86,5 +90,13 @@ body {
 }
 
 .active[data-tab-content] {
+    display: block;
+}
+
+.tab-content #guide .guide-window .unactive[guide-content] {
+    display: none;
+}
+
+.tab-content #guide .guide-window .active[guide-content] {
     display: block;
 }

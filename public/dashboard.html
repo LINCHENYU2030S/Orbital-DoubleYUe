@@ -19,11 +19,11 @@
     <div class="sidebar">
         <nav class="sidebar-buttons">
         <ul class="tabs">
-            <li data-tab-target="#dashboard" class="active tab">Dashboard</li>
-            <li data-tab-target="#portfolio" class="unactive tab">Portfolio</li>
-            <li data-tab-target="#trade" class="unactive tab">Trade</li>
-            <li data-tab-target="#settings" class="unactive tab">Settings</li>
-            <li data-tab-target="#guide" class="unactive tab">Guide</li>
+            <li id="sidebar-button-dashboard" data-tab-target="#dashboard" class="active tab">Dashboard</li>
+            <li id="sidebar-button-portfolio" data-tab-target="#portfolio" class="unactive tab">Portfolio</li>
+            <li id="sidebar-button-trade" data-tab-target="#trade" class="unactive tab">Trade</li>
+            <li id="sidebar-button-settings" data-tab-target="#settings" class="unactive tab">Settings</li>
+            <li id="sidebar-button-guide" data-tab-target="#guide" class="unactive tab">Guide</li>
         </ul>
         </nav>
     </div>
@@ -32,17 +32,123 @@
         <div id="dashboard" data-tab-content class="active">
             <h1>This is the Dashboard section</h1>
         </div>
+
         <div id="portfolio" data-tab-content>
             <h1>This is the Portfolio section</h1>
         </div>
+
         <div id="trade" data-tab-content>
             <h1>This is the Trade section</h1>
+            <div id="trade-popup">
+                Trade Popup Window
+            </div>
         </div>
+
         <div id="settings" data-tab-content>
             <h1>This is the Settings section</h1>
         </div>
+
         <div id="guide" data-tab-content>
-            <h1>This is the Guide section</h1>
+            <!-- <h1>This is the Guide section</h1> -->
+            <div class="guide-window">
+
+                <div id="guide-1" class="unactive guide" guide-content>
+                    <div class="part">
+                        Part 1 / 8
+                    </div>
+                    <div class="title">
+                        What is Trading?
+                    </div>
+                    <div class="content">
+                        Trading, in simple terms, is the act of buying and selling financial instruments (like shares, forex and indices), in the hopes of making a profit from changes in their price movements.
+                    </div>
+                </div>
+                <div id="guide-2" class="unactive guide" guide-content>
+                    <div class="part">
+                        Part 2 / 8
+                    </div>
+                    <div class="title">
+                        What is a Trading Simulator?
+                    </div>
+                    <div class="content">
+                        A trading simulator is computer software that reproduces behavior and features of a stock market, so that a user may practice trading stocks without financial risk.
+                    </div>
+                </div>
+                <div id="guide-3" class="unactive guide" guide-content>
+                    <div class="part">
+                        Part 3 / 8
+                    </div>
+                    <div class="title">
+                        Why should we need a Trading Simulator?
+                    </div>
+                    <div class="content">
+                        A trading simulator allows you to hone your skills and develop strategies about trading without risking actual money.
+                    </div>
+                </div>
+                <div id="guide-4" class="unactive guide" guide-content>
+                    <div class="part">
+                        Part 4 / 8
+                    </div>
+                    <div class="title">
+                        Leverage
+                    </div>
+                    <div class="content">
+                        Leverage in trading enables you to open a position worth much more than the money you deposit. (For example, a 1: 100 leverage means for every $1 in your balance, you can trade up to $100)
+                    </div>
+                </div>
+                <div id="guide-5" class="unactive guide" guide-content>
+                    <div class="part">
+                        Part 5 / 8
+                    </div>
+                    <div class="title">
+                        Margin
+                    </div>
+                    <div class="content">
+                        A small deposit that can be used to control a large amount of an asset. We call this deposit: standard margin or initial margin. This is the absolute minimum you need in your account to open and maintain a position. 
+                    </div>
+                </div>
+                <div id="guide-6" class="unactive guide" guide-content>
+                    <div class="part">
+                        Part 6 / 8
+                    </div>
+                    <div class="title">
+                        Market Volatility
+                    </div>
+                    <div class="content">
+                        Market volatility is the frequency and magnitude of price movements, up or down. The bigger and more frequent the price swings, the more volatile the market is said to be.
+                    </div>
+                </div>
+                <div id="guide-7" class="unactive guide" guide-content>
+                    <div class="part">
+                        Part 7 / 8
+                    </div>
+                    <div class="title">
+                        Stop Loss
+                    </div>
+                    <div class="content">
+                        Stop orders help you to manage your risk so that you won’t lose more than you bargained for. Stops act as a safety net, ensuring your trade is closed if the market reaches a predetermined level. 
+                    </div>
+                </div>
+                <div id="guide-8" class="unactive guide" guide-content>
+                    <div class="part">
+                        Part 8 / 8
+                    </div>
+                    <div class="title">
+                        Limit
+                    </div>
+                    <div class="content">
+                        Set a limit means setting a target for your profit. If the price moves to the predetermined level chosen by you, your trade is closed guaranteeing you a profit. 
+                    </div>
+                </div>
+                
+                <div id="guide-next-button">
+                    <button>next</button>
+                </div>
+
+                <div id="guide-back-button">
+                    <button>back</button>
+                </div>
+            </div>
         </div>
     </div>
     
