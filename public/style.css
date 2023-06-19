@@ -91,6 +91,8 @@ body {
     display: block;
 }
 
+
+/* Trade */
 .tab-content #trade .trade-window {
     font-size: 40px;
     color: aliceblue;
@@ -103,7 +105,6 @@ body {
     padding: 30px 40px;
     border: 2px solid #00fbff;
 }
-
 .tab-content #trade .trade-window .title {
     position: absolute;
     left: 100px;
@@ -111,25 +112,41 @@ body {
     text-align: center;
     font-size: 30px;
 }
-
 .tab-content #trade .trade-window .options-container {
     position: absolute;
-    top: 130px;
-    right: 300px;
+    top: 110px;
+    right: 250px;
     text-align: right;
     font-size: 25px;
 }
-
 .tab-content #trade .trade-window #confirm-order-button {
     position: absolute;
-    left: 320px;
-    right: 320px;
-    top: 400px;
+    right: 250px;
+    bottom: 90px;
     text-align: center;
     font-size: 25px;
     border: 2px solid white;
+    width: 264px;
+    padding: 2px 0px 3px 0px;
+}
+.tab-content #trade .trade-window .options-container [trading-attr] {
+    margin: 0px 0px 10px 0px;
+}
+.tab-content #trade .trade-window .options-container [option-box] {
+    color: white;
+    background-color: transparent;
+    border: 2px solid white;
+    font-size: 25px;
+}
+.tab-content #trade .trade-window .options-container select[option-box] {
+    width: 268px;
+}
+.tab-content #trade .trade-window .options-container ::placeholder {
+    color: #a7a7a7;
 }
 
+
+/* Guide */
 .tab-content #guide {
     font-size: 40px;
     color: aliceblue;

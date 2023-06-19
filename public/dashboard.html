@@ -42,31 +42,30 @@
             <div class="trade-window">
                 <div class="title">Place Order</div>
                 <div class="options-container">
-                    <div options class="stock-option">
+                    <div trading-attr class="stock-option">
                         <label for="stock">Stock: </label>
-                        <input list="stocks" name="stock" id="stock">
-                        <datalist id="stocks">
-                            <option value="Alphabet Inc.">
-                            <option value="Apple Inc.">
-                            <option value="Microsoft">
-                            <option value="Netflix">
-                        </datalist>
+                        <select option-box id="stocks" placeholder="Select a stock">
+                            <option value="Alphabet Inc.">Alphabet Inc.</option>
+                            <option value="Apple Inc.">Apple Inc.</option>
+                            <option value="Microsoft">Microsoft</option>
+                            <option value="Netflix">Netflix</option>
+                        </select>
                     </div>
-                    <div options class="size-option">
+                    <div trading-attr class="size-option">
                         <label for="">Size: </label>
-                        <input type="number">
+                        <input option-box type="number" placeholder="Enter a size">
                     </div>
-                    <div options class="stoploss-option">
+                    <div trading-attr class="stoploss-option">
                         <label for="">Stop Loss($): </label>
-                        <input type="number">
+                        <input option-box type="number" placeholder="Enter stop loss">
                     </div>
-                    <div options class="takeprofit-option">
+                    <div trading-attr class="takeprofit-option">
                         <label for="">Take Profit($): </label>
-                        <input type="number">
+                        <input option-box type="number" placeholder="Enter take profit">
                     </div>
-                    <div options class="type-option">
+                    <div trading-attr class="type-option">
                         <label for="stock-type">Type: </label>
-                        <select id="stock-type">
+                        <select option-box id="stock-type">
                             <option value="long">Long</option>
                             <option value="short">Short</option>
                         </select>
