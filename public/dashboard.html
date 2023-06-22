@@ -7,6 +7,7 @@
     <title>DoubleYUe</title>
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -29,9 +30,172 @@
     </div>
 
     <div class="tab-content">
+        <!-- This is the dashboard section-->
         <div id="dashboard" data-tab-content class="active">
-            <h1>This is the Dashboard section</h1>
+            <div id="charting-form">
+                <fieldset>
+                <legend class = "legend2">Chart</legend>
+                <input type="text" id="searchInput" placeholder="Search for a stock" required>
+                <ul id="searchResults"></ul>
+                
+                <label for="Time Frame" class="time">Time Frame: </label>
+                <select option-box id="Time-Frame" placeholder="Select a Time Frame">
+                <option value="TIME_SERIES_INTRADAY_EXTENDED">15 min</option>
+                <option value="TIME_SERIES_DAILY_ADJUSTED">Day</option>
+                <option value="TIME_SERIES_WEEKLY">Week</option>
+                <option value="TIME_SERIES_MONTHLY">Month</option>
+                </select>
+                </fieldset>
+                <button id="signin-button" class="startTradingBtn">View Chart</button>
+            </div> 
+            <script>
+                $(document).ready(function() {
+                const apiKey = "C3XZTDGXRR6K8AZS";
+                const searchInput = $("#searchInput");
+                const searchResults = $("#searchResults");
+
+                // Function to fetch search results from Alpha Vantage API
+                function fetchSearchResults(keyword) {
+                    const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${keyword}&apikey=${apiKey}`;
+                    
+                    // Make the API request
+                    $.get(url, function(data) {
+                    searchResults.empty();
+                    const results = data.bestMatches;
+                    results.forEach(function(result) {
+                        const symbol = result["1. symbol"];
+                        const name = result["2. name"];
+                        const listItem = `<li>${symbol} - ${name}</li>`;
+                        const $listItem = $(listItem);
+                        
+                        // Add click event handler to the autocomplete item
+                        $listItem.on("click", function() {
+                        // Update the input value with the selected option
+                        searchInput.val(symbol);
+                        
+                        // Perform desired action when an item is clicked
+                        console.log("Selected:", symbol);
+                        // You can use the selected symbol or perform any other action here
+                        });
+                        
+                        searchResults.append($listItem);
+                    });
+                    });
+                }
+
+                // Event handler for input changes
+                searchInput.on("input", function() {
+                    const keyword = $(this).val();
+                    if (keyword.length > 0) {
+                    fetchSearchResults(keyword);
+                    } else {
+                    searchResults.empty();
+                    }
+                });
+                });
+
+                $(document).ready(function() {
+                // Event handler for "View Chart" button click
+                $("#signin-button").on("click", function() {
+                // Get the selected stock and time frame
+                const selectedStock = $("#searchInput").val();
+                const selectedTimeFrame = $("#Time-Frame").val();
+
+                // Store the values in localStorage
+                localStorage.setItem("selectedStock", selectedStock);
+                localStorage.setItem("selectedTimeFrame", selectedTimeFrame);
+
+                // Redirect to the other HTML file
+                window.location.href = "visualization.html";
+                });
+            });
+
+            </script>
+            <style>
+                #dashboard {
+                padding: 20px;
+                text-align: center;
+                }
+
+                #charting-form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 20px;
+                }
+
+                legend {
+                font-weight: bold;
+                }
+
+                #searchInput {
+                width: 250px;
+                padding: 10px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                margin-bottom: 10px;
+                }
+
+                #searchResults {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+                }
+
+                #searchResults li {
+                cursor: pointer;
+                padding: 5px;
+                font-size: 14px;
+                color: blue;
+                }
+
+                #searchResults li:hover {
+                background-color: #f2f2f2;
+                }
+
+                .startTradingBtn {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                border-radius: 5px;
+                cursor: pointer;
+                }
+
+                .startTradingBtn:hover {
+                background-color: #45a049;
+                }
+
+                .legend2 {
+                color: #333;
+                font-size: 20px;
+                margin-bottom: 10px;
+                }
+
+                .active {
+                display: block;
+                }
+
+                #Time-Frame {
+                    width: 250px;
+                    padding: 10px;
+                    font-size: 16px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+                }
+
+                .time {
+                    font-size: 20px;
+                }
+            </style>
         </div>
+        <!-- This is the end of the dashboard section-->
 
         <div id="portfolio" data-tab-content>
             <h1>This is the Portfolio section</h1>
