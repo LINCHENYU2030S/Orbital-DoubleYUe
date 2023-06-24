@@ -33,6 +33,7 @@
             if (selectedTimeFrame == 'TIME_SERIES_INTRADAY_EXTENDED') {
                 url = url + '&interval=15min&slice=year1month1';
             }
+
             anychart.onDocumentReady(function () {
                 anychart.data.loadCsvFile(
                 url,
