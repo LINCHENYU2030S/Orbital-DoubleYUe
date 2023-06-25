@@ -76,6 +76,7 @@ body {
     right: 300px;
     top: 160px;
     bottom: 140px;
+    /* background-color: red; */
 } 
 [data-tab-content] {
     display: none;
@@ -152,6 +153,130 @@ body {
 }
 .tab-content #trade .trade-window #confirm-order-button:active {
     background-color: rgb(255, 255, 255, 0.9);
+}
+
+
+/* Settings */
+.tab-content #settings .settings-section {
+    background-color: rgba(0, 0, 0, 0.8);
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    left: -100px;
+    right: -220px;
+    top: -80px;
+    bottom: -100px;
+}
+
+.tab-content #settings .settings-section .headings {
+    /* background-color: #00fbff; */
+    border-bottom: 2px solid white;
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 47px;
+    top: 0px;
+}
+
+.tab-content #settings .settings-section .headings .change-password-headings {
+    /* background-color: red; */
+    position: absolute;
+    left: 170px;
+    display: flex;
+    gap: 8px;
+}
+.tab-content #settings .settings-section .headings .change-password-headings #icon-arrow {
+    /* background-color: red; */
+    position: relative;
+    bottom: -1px;
+}
+.tab-content #settings .settings-section .headings .unactive {
+    display: none;
+}
+
+.tab-content #settings .settings-section .headings #icon-settings {
+    font-size: 28px;
+    /* background-color: red; */
+    position: absolute;
+    height: 40px;
+    top: 0px;
+}
+.tab-content #settings .settings-section .headings #title-settings {
+    position: absolute;
+    left: 30px;
+    height: 100%;
+    bottom: 0px;
+}
+
+.tab-content #settings .settings-section .content .unactive {
+    display: none;
+}
+.tab-content #settings .settings-section .content .default-page [buttons] {
+    /* background-color: red; */
+    position: absolute;
+    left: 0px;
+    right: 40px;
+    border: 2px solid white;
+    background-color: #000000;
+    padding: 5px;
+    font-size: 30px;
+}
+.tab-content #settings .settings-section .content [buttons]:hover {
+    cursor: pointer;
+    background-color: rgb(255, 255, 255, 0.5);
+}
+.tab-content #settings .settings-section .content [buttons]:active {
+    background-color: rgb(255, 255, 255, 0.9);
+}
+.tab-content #settings .settings-section .content #change-password-button {
+    top: 60px;
+}
+.tab-content #settings .settings-section .content #logout-button {
+    top: 110px;
+    color: red;
+    border: 2px solid red;
+    display: flex;
+}
+.tab-content #settings .settings-section .content #logout-button [icon] {
+    position: absolute;
+    left: 100px;
+}
+/* Settings - ChangePassword */
+.tab-content #settings .settings-section .content .change-password-page .password-inputs {
+    /* background-color: red; */
+    display: block;
+    position: absolute;
+    top: 80px;
+    right: 40px;
+    left: 0px;
+    text-align: right;
+    font-size: 30px;
+}
+.tab-content #settings .settings-section .content .change-password-page .password-inputs input {
+    all: unset;
+    background-color: #000000;
+    width: 70%;
+    border: 2px solid white;
+    text-align: left;
+    padding: 0px 10px;
+}
+.tab-content #settings .settings-section .content .change-password-page .password-inputs input::placeholder {
+    color: #a7a7a7;
+    position: absolute;
+}
+
+#change-password-page-back-button {
+    position: absolute;
+    bottom: 120px;
+    border: 2px solid white;
+    padding: 0px 10px;
+}
+#change-password-page-confirm-changes-button {
+    position: absolute;
+    bottom: 120px;
+    right: 0px;
+    border: 2px solid white;
+    padding: 0px 10px;
 }
 
 

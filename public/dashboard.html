@@ -197,150 +197,149 @@
         </div>
         <!-- This is the end of the dashboard section-->
 
-    <!-- This is the portfolio section -->
-    <div id="portfolio" data-tab-content>
-        <div class="portfolio-container">
-        <h1>Portfolio</h1>
-        <div class="balance" id="balance">
-            <h2>Current Balance</h2>
-            <p id="current-balance">$10000</p>
-        </div>
-        <div class="transactions">
-            <div class="top-up">
-            <h3>Total Top-up</h3>
-            <p id="total-top-up">$0</p>
+        <!-- This is the portfolio section -->
+        <div id="portfolio" data-tab-content>
+            <div class="portfolio-container">
+            <h1>Portfolio</h1>
+            <div class="balance" id="balance">
+                <h2>Current Balance</h2>
+                <p id="current-balance">$10000</p>
             </div>
-            <div class="withdrawal">
-            <h3>Total Withdrawal</h3>
-            <p id="total-withdrawal">$0</p>
+            <div class="transactions">
+                <div class="top-up">
+                <h3>Total Top-up</h3>
+                <p id="total-top-up">$0</p>
+                </div>
+                <div class="withdrawal">
+                <h3>Total Withdrawal</h3>
+                <p id="total-withdrawal">$0</p>
+                </div>
+                <div class="profit-loss">
+                <h3>Total Profit/Loss</h3>
+                <p id="total-profit-loss">$0</p>
+                </div>
             </div>
-            <div class="profit-loss">
-            <h3>Total Profit/Loss</h3>
-            <p id="total-profit-loss">$0</p>
+            <div class="buttons">
+                <input type="number" placeholder="Enter an amount to top-up / withdraw" id="top-up-withdraw-input">
+                <button id="top-up-button" class="top-up-btn">Top-up</button>
+                <button id="withdraw-button" class="withdraw-btn">Withdraw</button>
+            </div>
             </div>
         </div>
-        <div class="buttons">
-            <input type="number" placeholder="Enter an amount to top-up / withdraw" id="top-up-withdraw-input">
-            <button id="top-up-button" class="top-up-btn">Top-up</button>
-            <button id="withdraw-button" class="withdraw-btn">Withdraw</button>
-        </div>
-        </div>
-    </div>
-    <style>
-        /* Portfolio section styles */
-        .portfolio-container {
-        padding: 20px;
-        text-align: center;
-        }
+        <style>
+            /* Portfolio section styles */
+            .portfolio-container {
+            padding: 20px;
+            text-align: center;
+            }
 
-        .balance {
-        margin-bottom: 20px;
-        }
+            .balance {
+            margin-bottom: 20px;
+            }
 
-        .balance h2 {
-        font-size: 24px;
-        margin-bottom: 10px;
-        }
+            .balance h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            }
 
-        .transactions {
-        display: flex;
-        justify-content: space-around;
-        margin-bottom: 20px;
-        }
+            .transactions {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            }
 
-        .transactions div {
-        flex-basis: 33.33%;
-        }
+            .transactions div {
+            flex-basis: 33.33%;
+            }
 
-        .transactions h3 {
-        font-size: 18px;
-        margin-bottom: 5px;
-        }
+            .transactions h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+            }
 
-        .buttons {
-        display: flex;
-        justify-content: center;
-        }
+            .buttons {
+            display: flex;
+            justify-content: center;
+            }
 
-        .buttons button {
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        margin: 0 10px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        border-radius: 5px;
-        cursor: pointer;
-        }
+            .buttons button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            }
 
-        .buttons button:hover {
-        background-color: #45a049;
-        }
-        #top-up-withdraw-input {
-            margin-right: 10px;
-            padding: 5px;
-            width: 200px;
-        }
-    </style>
+            .buttons button:hover {
+            background-color: #45a049;
+            }
+            #top-up-withdraw-input {
+                margin-right: 10px;
+                padding: 5px;
+                width: 200px;
+            }
+        </style>
 
-    <script>
-        $(document).ready(function() {
-        // Get the necessary elements
-        const topUpWithdrawInput = document.getElementById('top-up-withdraw-input');
-        const balanceElement = document.getElementById('balance');
-        const topUpBtn = document.querySelector('.top-up-btn');
-        const withdrawBtn = document.querySelector('.withdraw-btn');
+        <script>
+            $(document).ready(function() {
+            // Get the necessary elements
+            const topUpWithdrawInput = document.getElementById('top-up-withdraw-input');
+            const balanceElement = document.getElementById('balance');
+            const topUpBtn = document.querySelector('.top-up-btn');
+            const withdrawBtn = document.querySelector('.withdraw-btn');
 
-        let balance = 10000;
-        let totalTopUp = 0;
-        let totalWithdraw = 0;
+            let balance = 10000;
+            let totalTopUp = 0;
+            let totalWithdraw = 0;
 
-        topUpBtn.addEventListener('click', handleTopUp);
-        withdrawBtn.addEventListener('click', handleWithdraw);
+            topUpBtn.addEventListener('click', handleTopUp);
+            withdrawBtn.addEventListener('click', handleWithdraw);
 
-        function handleTopUp() {
-        const amount = parseFloat(topUpWithdrawInput.value);
-        if (isNaN(amount) || amount <= 0) {
-            alert('Please enter a valid positive amount to top up.');
-            return;
-        }
+            function handleTopUp() {
+            const amount = parseFloat(topUpWithdrawInput.value);
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid positive amount to top up.');
+                return;
+            }
 
-        balance += amount;
-        totalTopUp += amount;
-        updateBalance();
-        topUpWithdrawInput.value = '';
-        }
+            balance += amount;
+            totalTopUp += amount;
+            updateBalance();
+            topUpWithdrawInput.value = '';
+            }
 
-        function handleWithdraw() {
-        const amount = parseFloat(topUpWithdrawInput.value);
-        if (isNaN(amount) || amount <= 0) {
-            alert('Please enter a valid positive amount to withdraw.');
-            return;
-        }
+            function handleWithdraw() {
+            const amount = parseFloat(topUpWithdrawInput.value);
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid positive amount to withdraw.');
+                return;
+            }
 
-        if (balance - amount < 0) {
-            alert('Insufficient funds. Cannot withdraw more than the current balance.');
-            return;
-        }
+            if (balance - amount < 0) {
+                alert('Insufficient funds. Cannot withdraw more than the current balance.');
+                return;
+            }
 
-        balance -= amount;
-        totalWithdraw += amount;
-        updateBalance();
-        topUpWithdrawInput.value = '';
-        }
+            balance -= amount;
+            totalWithdraw += amount;
+            updateBalance();
+            topUpWithdrawInput.value = '';
+            }
 
-        function updateBalance() {
-        balanceElement.textContent = `Balance: $${balance}`;
-        document.getElementById('total-top-up').textContent = ` $${totalTopUp}`;
-        document.getElementById('total-withdrawal').textContent = ` $${totalWithdraw}`;
-        }
-    });
-    </script>
-
-    <!-- This is the end of portfolio section-->
+            function updateBalance() {
+            balanceElement.textContent = `Balance: $${balance}`;
+            document.getElementById('total-top-up').textContent = ` $${totalTopUp}`;
+            document.getElementById('total-withdrawal').textContent = ` $${totalWithdraw}`;
+            }
+        });
+        </script>
+        <!-- This is the end of portfolio section-->
 
         <div id="trade" data-tab-content>
             <!-- <h1>This is the Trade section</h1> -->
@@ -381,7 +380,39 @@
         </div>
 
         <div id="settings" data-tab-content>
-            <h1>This is the Settings section</h1>
+            <!-- <h1>This is the Settings section</h1> -->
+            <div class="settings-section">
+                <div class="headings">
+                    <ion-icon id="icon-settings" name="settings-sharp"></ion-icon>
+                    <div id="title-settings">Settings</div>
+
+                    <div class="unactive change-password-headings">
+                        <ion-icon id="icon-arrow" name="arrow-forward-outline"></ion-icon>
+                        <div id="title-change-password">Change Password</div>
+                    </div>
+
+                </div>
+                <div class="content">
+                    <div class="default-page active">
+                        <div buttons id="change-password-button">Change Password</div>
+                        <div buttons id="logout-button">
+                            <div id="title-logout">Logout</div>
+                            <ion-icon icon name="log-out-outline"></ion-icon>
+                        </div>
+                    </div>
+
+                    <div class="change-password-page unactive">
+                        <div class="password-inputs">
+                            <label for="change-password-page-password1">New Password: </label>
+                            <input id="change-password-page-password1" type="password" placeholder="Enter your new password"><br><br>
+                            <label for="change-password-page-password2">Confirm New Password: </label>
+                            <input id="change-password-page-password2" type="password" placeholder="Re-enter your new password">
+                        </div>
+                        <div buttons id="change-password-page-back-button">Back</div>
+                        <div buttons id="change-password-page-confirm-changes-button">Confirm Changes</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="guide" data-tab-content>
@@ -489,6 +520,8 @@
     </div>
     
 
-    <script src="script.js"></script>
+    <script src="script.js" type="module"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

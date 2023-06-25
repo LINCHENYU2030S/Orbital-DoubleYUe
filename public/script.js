@@ -1,4 +1,27 @@
 //alert("Yo")
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import { getAuth, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+    apiKey: "AIzaSyBi9h_Rpk9-RUBKRZ_WGHLrdNQ5YEHvJk8",
+    authDomain: "doubleyue-57c46.firebaseapp.com",
+    databaseURL: "https://doubleyue-57c46-default-rtdb.firebaseio.com",
+    projectId: "doubleyue-57c46",
+    storageBucket: "doubleyue-57c46.appspot.com",
+    messagingSenderId: "616024099867",
+    appId: "1:616024099867:web:15c57e18d3cc49e3397cbe",
+    measurementId: "G-9EBK7QNX7B"
+};
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+// Initialize Firebase Authentication and get a reference to the service
+const auth = getAuth(app);
+
+
+
 let i = 1;
 const tabs = document.querySelectorAll('[data-tab-target]');
 const tabContents = document.querySelectorAll('[data-tab-content]');
@@ -33,6 +56,64 @@ tabs.forEach(tab => {
         }
     });
 });
+
+
+// settingsPart
+const changePasswordBtn = document.getElementById('change-password-button');
+changePasswordBtn.addEventListener('click', () => {
+    const changePasswordHeadings = document.getElementsByClassName('change-password-headings')[0];
+    changePasswordHeadings.classList.remove('unactive');
+
+    const changePasswordPage = document.getElementsByClassName('change-password-page')[0];
+    changePasswordPage.classList.remove('unactive');
+
+    const settingsDefaultPage = document.getElementsByClassName('default-page')[0];
+    settingsDefaultPage.classList.add('unactive');
+});
+const logoutBtn = document.getElementById('logout-button');
+logoutBtn.addEventListener('click', () => {
+    signOut(auth).then(() => {
+            // Sign-out successful.
+            alert('User logged out!');
+            window.location.assign("index.html");
+        }).catch((error) => {
+            // An error happened.
+        });
+});
+const changePasswordPageBackButton = document.getElementById('change-password-page-back-button');
+changePasswordPageBackButton.addEventListener('click', () => {
+    const changePasswordHeadings = document.getElementsByClassName('change-password-headings')[0];
+    changePasswordHeadings.classList.add('unactive');
+
+    const changePasswordPage = document.getElementsByClassName('change-password-page')[0];
+    changePasswordPage.classList.add('unactive');
+
+    const settingsDefaultPage = document.getElementsByClassName('default-page')[0];
+    settingsDefaultPage.classList.remove('unactive');
+});
+const changePasswordPageConfirmChangesButton = document.getElementById('change-password-page-confirm-changes-button');
+changePasswordPageConfirmChangesButton.addEventListener('click', () => {
+    const user = auth.currentUser;
+    const password1 = document.getElementById('change-password-page-password1').value;
+    const password2 = document.getElementById('change-password-page-password2').value;
+
+    if (password1 != password2) {
+        alert("Passwords do not match!");
+        return;
+    }
+
+    updatePassword(user, password1).then(() => {
+        alert("User Password Successfully Updated!");
+    }).catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        alert("login failed " + errorCode + " " + errorMessage);
+        console.log(errorCode + errorMessage);
+    });
+
+});
+
 
 // guidePart
 const nextBtn = document.getElementById('guide-next-button');
