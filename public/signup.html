@@ -66,14 +66,26 @@
             font-size: 30px;
             background-color:antiquewhite;
         }
+        body .startTradingBtn:hover {
+            cursor: pointer;
+            background-color: rgb(255, 251, 246);
+        }
+        body .startTradingBtn:active {
+            background-color: rgb(255, 255, 255);
+        }
 
-        .custom-button{
+        .custom-button {
             background-color:aqua;
             padding: 10px 20px;
             border: none;
             border-radius: 4px;
+        }
+        .custom-button:hover {
             cursor: pointer;
-
+            background-color: rgb(141, 255, 255);
+        }
+        .custom-button:active {
+            background-color: rgb(230, 255, 255);
         }
 
         .input-container label {
@@ -91,6 +103,7 @@
             padding: 10px;
             font-size: 16px;
             margin-bottom: 10px;
+            width: 200px;
         }
 
         .legend {
@@ -182,7 +195,7 @@
 
             //check if passwords match
             if (password != passwordConfirmation) {
-                alert("passwords do not match")
+                alert("Passwords Do Not Match!")
                 return;
             }
 
@@ -202,8 +215,19 @@
 
                     if (errorCode == "auth/email-already-in-use") {
                         alert("User already exists!");
+                    } 
+                    else if (errorCode == "auth/invalid-email") {
+                        alert("Please Enter a Valid Email!");
+                    } 
+                    else if (errorCode == "auth/missing-password") {
+                        alert("Please Enter a Password!");
+                    } 
+                    else if (errorCode == "auth/weak-password") {
+                        alert("Password should be at least 6 characters!");
                     }
-                    alert("signup failed" + errorCode + errorMessage);
+                    else {
+                        alert("signup failed " + errorCode + " " + errorMessage);
+                    }
                     console.log(errorCode + errorMessage);
                 });
         });

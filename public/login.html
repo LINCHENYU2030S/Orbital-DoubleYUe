@@ -78,6 +78,7 @@
             padding: 10px;
             font-size: 16px;
             margin-bottom: 10px;
+            width: 200px;
         }
 
         body .startTradingBtn {
@@ -87,14 +88,26 @@
             font-size: 30px;
             background-color:antiquewhite;
         }
+        body .startTradingBtn:hover {
+            cursor: pointer;
+            background-color: rgb(255, 251, 246);
+        }
+        body .startTradingBtn:active {
+            background-color: rgb(255, 255, 255);
+        }
 
         .custom-button{
             background-color:aqua;
             padding: 10px 20px;
             border: none;
             border-radius: 4px;
+        }
+        .custom-button:hover {
             cursor: pointer;
-
+            background-color: rgb(141, 255, 255);
+        }
+        .custom-button:active {
+            background-color: rgb(230, 255, 255);
         }
 
     
@@ -195,14 +208,23 @@
                     const errorCode = error.code;
                     const errorMessage = error.message;
 
-                    if (errorCode == "auth/user-not-found") {
-                        alert("User does not exist");
-                    } else if (errorCode == "auth/wrong-password") {
+                    if (errorCode == "auth/invalid-email") {
+                        alert("Please Enter a Valid Email!");
+                    }
+                    else if (errorCode == "auth/missing-password") {
+                        alert("Please Enter Your Password!");
+                    } 
+                    else if (errorCode == "auth/user-not-found") {
+                        alert("User Does Not Exist!");
+                    } 
+                    else if (errorCode == "auth/wrong-password") {
                         alert("Incorrect Password!");
                     }
-
+                    else {
+                        alert("login failed " + errorCode + " " + errorMessage);
+                    }
                     // For debugging purposes
-                    // alert("login failed " + errorCode + " " + errorMessage);
+                    
                     console.log(errorCode + errorMessage);
                 });
         }); 

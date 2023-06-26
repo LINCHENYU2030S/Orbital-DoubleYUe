@@ -1,7 +1,7 @@
 //alert("Yo")
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getAuth, signOut, updatePassword, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -97,6 +97,11 @@ changePasswordPageConfirmChangesButton.addEventListener('click', () => {
     const password1 = document.getElementById('change-password-page-password1').value;
     const password2 = document.getElementById('change-password-page-password2').value;
 
+    if (!password1 && !password2) {
+        alert("Password length should be at least 6 characters!");
+        return;
+    }
+
     if (password1 != password2) {
         alert("Passwords do not match!");
         return;
@@ -108,7 +113,15 @@ changePasswordPageConfirmChangesButton.addEventListener('click', () => {
         const errorCode = error.code;
         const errorMessage = error.message;
 
-        alert("login failed " + errorCode + " " + errorMessage);
+        if (errorCode == "auth/weak-password") {
+            alert("Password should be at least 6 characters!");
+        } 
+        else if (errorCode == "auth/requires-recent-login") {
+            alert("Time session expired, please login again!");
+        }
+        else {
+            alert("login failed " + errorCode + " " + errorMessage);
+        }
         console.log(errorCode + errorMessage);
     });
 
