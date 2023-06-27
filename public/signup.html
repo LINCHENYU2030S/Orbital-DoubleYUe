@@ -188,7 +188,25 @@
         const signupBtn = document.getElementById('signup-button');
 
         // When signupBtn is clicked, sign up the user 
-        signupBtn.addEventListener('click', function(){
+        signupBtn.addEventListener('click', signUpAndLogin);
+
+        document.getElementById("email").addEventListener('keydown', (event) => {
+            if (event.keyCode === 13) {
+                document.getElementById("password1").focus();
+            }
+        });
+        document.getElementById("password1").addEventListener('keydown', (event) => {
+            if (event.keyCode === 13) {
+                document.getElementById("password2").focus();
+            }
+        });
+        document.getElementById("password2").addEventListener('keydown', (event) => {
+            if (event.keyCode === 13) {
+                signUpAndLogin();
+            }
+        });
+
+        function signUpAndLogin() {
             const email = document.getElementById("email").value;
             const password = document.getElementById("password1").value;
             const passwordConfirmation = document.getElementById("password2").value;
@@ -230,7 +248,7 @@
                     }
                     console.log(errorCode + errorMessage);
                 });
-        });
+        }
     </script>
 
 </body>

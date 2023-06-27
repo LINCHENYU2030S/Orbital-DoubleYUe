@@ -190,8 +190,19 @@
         const signinBtn = document.getElementById('signin-button');
 
         // When signinBtn in clicked, sign in the user
-        signinBtn.addEventListener('click', function(){
+        signinBtn.addEventListener('click', login); 
 
+        // In Email section, when "Enter / Return" button is pressed, bring user to password section
+        document.getElementById("email-signin").addEventListener('keydown', (event) => {
+            if (event.keyCode === 13) {
+                document.getElementById("password-signin").focus();
+            }
+        });
+
+        // In Password section, when "Enter / Return" button is pressed, login user
+        document.getElementById("password-signin").addEventListener('keydown', handleEnter);
+
+        function login() {
             const email = document.getElementById("email-signin").value;
             const password = document.getElementById("password-signin").value;
 
@@ -226,8 +237,15 @@
                     // For debugging purposes
                     
                     console.log(errorCode + errorMessage);
+                    return;
                 });
-        }); 
+        }
+
+        function handleEnter(e) {
+            if (e.keyCode == 13) {
+                login();
+            }
+        }
     </script>
 
 </body>
