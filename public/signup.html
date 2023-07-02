@@ -222,6 +222,14 @@
                     // Signed in 
                     const user = userCredential.user;
                     // ...
+                    if (typeof(Storage) !== "undefined") {
+                        // Code for localStorage/sessionStorage.
+                        sessionStorage.email = email;
+                        sessionStorage.password = password;
+                    } else {
+                        // Sorry! No Web Storage support..
+                        alert("Sorry, your browser does not support web storage...");
+                    }
                     alert("user created!");
                     window.location.assign("dashboard.html");
                     console.log("user created!");

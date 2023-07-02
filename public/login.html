@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-        function passVal() {
-            var name = document.getElementById("name").value;
-            localStorage.setItem("textVal", name);
-            return false;
-        }
-    </script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -142,10 +135,10 @@
             <fieldset>
                 <legend class = "legend">SIGN IN</legend>
                 <div class="input-container">
-                    <label for="email">Email Address: </label>
+                    <label for="email-signin">Email Address: </label>
                     <input id="email-signin" type="text" placeholder="Enter your email address" required>
 
-                    <label for="password">Your password: </label>
+                    <label for="password-signin">Your password: </label>
                     <input id="password-signin" type="password" placeholder="Enter your password" required>
                 </div>
             </fieldset>
@@ -160,9 +153,9 @@
 
     <script type="module">
         // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-        import { getDatabase } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getDatabase } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -211,6 +204,14 @@
                     // Signed in 
                     const user = userCredential.user;
                     // ...
+                    if (typeof(Storage) !== "undefined") {
+                        // Code for localStorage/sessionStorage.
+                        sessionStorage.email = email;
+                        sessionStorage.password = password;
+                    } else {
+                        // Sorry! No Web Storage support..
+                        alert("Sorry, your browser does not support web storage...");
+                    }
                     alert("user signed in!");
                     window.location.assign("dashboard.html");
                     console.log("user signed in!");
@@ -247,6 +248,5 @@
             }
         }
     </script>
-
 </body>
 </html>

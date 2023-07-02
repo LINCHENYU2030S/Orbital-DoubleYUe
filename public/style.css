@@ -1,3 +1,7 @@
+body.pending {
+    visibility: hidden;
+}
+
 body {
     background-color: rgb(0, 0, 0);
     background-image: url(img/backgroundimg.jpg);
