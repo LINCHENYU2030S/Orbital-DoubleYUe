@@ -5,6 +5,7 @@ body {
     background-size: cover;
     background-position: center top;
     height: 100vh;
+    overflow: hidden;
 }
 
 .doubleyue-trading-simulator {
@@ -71,11 +72,13 @@ body {
 .tab-content {
     font-size: 40px;
     color: aliceblue;
+    margin: 0;
+    padding: 0;
     position: absolute;
     left: 300px;
     right: 300px;
     top: 160px;
-    bottom: 140px;
+    bottom: 100px;
     /* background-color: red; */
 } 
 [data-tab-content] {
@@ -96,7 +99,7 @@ body {
     left: 30px;
     right: 30px;
     top: 16px;
-    bottom: 14px;
+    bottom: 0px;
     background-color: rgba(0, 0, 0, 0.8);
     padding: 30px 40px;
     border: 2px solid #00fbff;
@@ -123,14 +126,14 @@ body {
     margin: 0px 0px 20px 0px;
 }
 .tab-content #trade .trade-window .options-container [option-box] {
-    color: white;
+    all: unset;
     background-color: transparent;
     border: 2px solid white;
     font-size: 20px;
     position: absolute;
     left: 25%;
     right: 0px;
-    padding: 0px 3px;
+    padding: 2px 3px;
     margin: 0px;
 }
 .tab-content #trade .trade-window .options-container [option-box]:hover {
@@ -151,19 +154,25 @@ body {
 }
 .tab-content #trade .trade-window #confirm-order-button {
     position: absolute;
-    left: 30%;
-    right: 30%;
+    right: 10%;
     bottom: 10%;
+}
+.tab-content #trade .trade-window #view-chart-button {
+    position: absolute;
+    left: 10%;
+    bottom: 10%;
+}
+.tab-content #trade .trade-window .trade-window-buttons {
     text-align: center;
     font-size: 25px;
     border: 2px solid white;
-    padding: 2px 0px 3px 0px;
+    padding: 3px 8px;
 }
-.tab-content #trade .trade-window #confirm-order-button:hover {
+.tab-content #trade .trade-window .trade-window-buttons:hover {
     cursor: pointer;
     background-color: rgb(255, 255, 255, 0.5);
 }
-.tab-content #trade .trade-window #confirm-order-button:active {
+.tab-content #trade .trade-window .trade-window-buttons:active {
     background-color: rgb(255, 255, 255, 0.9);
 }
 
