@@ -1,16 +1,25 @@
-//alert("Yo")
+// IMPORTS
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { 
     getAuth, 
     signOut, 
     updatePassword,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getDatabase } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { 
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc,
+    addDoc,
+    collection,
+    updateDoc
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+// INITIALIZATIONS
 const firebaseConfig = {
     apiKey: "AIzaSyBi9h_Rpk9-RUBKRZ_WGHLrdNQ5YEHvJk8",
     authDomain: "doubleyue-57c46.firebaseapp.com",
@@ -21,19 +30,50 @@ const firebaseConfig = {
     appId: "1:616024099867:web:15c57e18d3cc49e3397cbe",
     measurementId: "G-9EBK7QNX7B"
 };
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-// Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
-const user = auth.currentUser;
+const db = getFirestore(app);
 
-// Check if user is logged in or not
+// TAB NAVIGATION
+let i = 1;
+const tabs = document.querySelectorAll('[data-tab-target]');
+const tabContents = document.querySelectorAll('[data-tab-content]');
+
+// PORTFOLIO
+let user = null;
+let userEmail = null;
+let balance = null;
+const topUpWithdrawInput = document.getElementById('top-up-withdraw-input');
+const balanceElement = document.getElementById('balance');
+const topUpBtn = document.querySelector('.top-up-btn');
+const withdrawBtn = document.querySelector('.withdraw-btn');
+
+// SETTINGS
+const changePasswordBtn = document.getElementById('change-password-button');
+const logoutBtn = document.getElementById('logout-button');
+const changePasswordPageBackButton = document.getElementById('change-password-page-back-button');
+const changePasswordPageConfirmChangesButton = document.getElementById('change-password-page-confirm-changes-button');
+
+// GUIDE
+const nextBtn = document.getElementById('guide-next-button');
+const backBtn = document.getElementById('guide-back-button');
+
+
+
 function login(email, password) {
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            alert("User email is " + email);
+            // alert("User email is " + email);
+            user = userCredential.user;
             console.log("User state is signed in!");
+            userEmail = user.email;
+            const docRef = doc(db, userEmail, "Portfolio");
+            (async () => {
+                const docSnap = await getDoc(docRef);
+                balance = await docSnap.data().balance;
+                balanceElement.innerHTML = "Balance: $" + balance;
+                console.log("userPortfolioBalance == " + balance);
+            })();
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -60,7 +100,6 @@ function login(email, password) {
             return;
         });
 }
-
 function checkAuth() {
     if (sessionStorage.email && sessionStorage.password) {
         document.body.classList.remove("pending");
@@ -69,14 +108,65 @@ function checkAuth() {
         alert("Please login first!");
         window.location.replace("login.html");
     }
+    return true;
 }
+
+
+// Check if user is logged in or not
+// if not logged in, nav to login page
 checkAuth();
 
 
+// portfolioPart
+let totalTopUp = 0;
+let totalWithdraw = 0;
 
-let i = 1;
-const tabs = document.querySelectorAll('[data-tab-target]');
-const tabContents = document.querySelectorAll('[data-tab-content]');
+topUpBtn.addEventListener('click', handleTopUp);
+withdrawBtn.addEventListener('click', handleWithdraw);
+
+function updateBalance(balance) {
+    balanceElement.textContent = `Balance: $` + balance;
+    (async () => {
+        const portfolioDocRef = doc(db, userEmail, "Portfolio");
+        await updateDoc(portfolioDocRef, {
+            "balance": balance
+        });
+    })();
+    document.getElementById('total-top-up').textContent = ` $` + totalTopUp;
+    document.getElementById('total-withdrawal').textContent = ` $` + totalWithdraw;
+}
+function handleTopUp() {
+    const amount = parseFloat(topUpWithdrawInput.value);
+    if (isNaN(amount) || amount <= 0) {
+        alert('Please enter a valid positive amount to top up.');
+        return;
+    }
+
+    balance += amount;
+    totalTopUp += amount;
+    updateBalance(balance);
+    topUpWithdrawInput.value = '';
+}
+function handleWithdraw() {
+    const amount = parseFloat(topUpWithdrawInput.value);
+    if (isNaN(amount) || amount <= 0) {
+        alert('Please enter a valid positive amount to withdraw.');
+        return;
+    }
+
+    if (balance - amount < 0) {
+        alert('Insufficient funds. Cannot withdraw more than the current balance.');
+        return;
+    }
+
+    balance -= amount;
+    totalWithdraw += amount;
+    updateBalance(balance);
+    topUpWithdrawInput.value = '';
+}
+
+
+// Tab Navigation System
 if (tabs) {
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -110,8 +200,9 @@ if (tabs) {
     });
 }
 
+
 // settingsPart
-const changePasswordBtn = document.getElementById('change-password-button');
+
 if (changePasswordBtn) {
     changePasswordBtn.addEventListener('click', () => {
         const changePasswordHeadings = document.getElementsByClassName('change-password-headings')[0];
@@ -124,20 +215,18 @@ if (changePasswordBtn) {
         settingsDefaultPage.classList.add('unactive');
     });
 }
-const logoutBtn = document.getElementById('logout-button');
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-        signOut(auth).then(() => {
-                // Sign-out successful.
-                sessionStorage.clear();
-                alert('User logged out!');
-                window.location.assign("index.html");
-            }).catch((error) => {
-                // An error happened.
-            });
+function logOut() {
+    signOut(auth).then(() => {
+        // Sign-out successful.
+        alert('User logged out!');
+        window.location.assign("index.html");
+    }).catch((error) => {
+        // An error happened.
     });
 }
-const changePasswordPageBackButton = document.getElementById('change-password-page-back-button');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', logOut);
+}
 if (changePasswordPageBackButton) {
     changePasswordPageBackButton.addEventListener('click', () => {
         const changePasswordHeadings = document.getElementsByClassName('change-password-headings')[0];
@@ -150,7 +239,6 @@ if (changePasswordPageBackButton) {
         settingsDefaultPage.classList.remove('unactive');
     });
 }
-const changePasswordPageConfirmChangesButton = document.getElementById('change-password-page-confirm-changes-button');
 if (changePasswordPageConfirmChangesButton) {
     changePasswordPageConfirmChangesButton.addEventListener('click', () => {
         const user = auth.currentUser;
@@ -189,8 +277,7 @@ if (changePasswordPageConfirmChangesButton) {
 }
 
 // guidePart
-const nextBtn = document.getElementById('guide-next-button');
-const backBtn = document.getElementById('guide-back-button');
+
 if (nextBtn) {
     nextBtn.addEventListener('click', () => {
         const currGuide = document.getElementById('guide-' + i);

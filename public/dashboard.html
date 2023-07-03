@@ -33,7 +33,6 @@
         <div id="dashboard" data-tab-content class="active">
             This is the dashboard section
         </div>
-        <!-- This is the end of the dashboard section-->
 
         <!-- This is the portfolio section -->
         <div id="portfolio" data-tab-content>
@@ -41,7 +40,7 @@
             <h1>Portfolio</h1>
             <div class="balance" id="balance">
                 <h2>Current Balance</h2>
-                <p id="current-balance">$10000</p>
+                <p id="current-balance"></p>
             </div>
             <div class="transactions">
                 <div class="top-up">
@@ -123,59 +122,57 @@
                 width: 200px;
             }
         </style>
-        <script>
+        <!-- <script>
             $(document).ready(function() {
-            // Get the necessary elements
-            const topUpWithdrawInput = document.getElementById('top-up-withdraw-input');
-            const balanceElement = document.getElementById('balance');
-            const topUpBtn = document.querySelector('.top-up-btn');
-            const withdrawBtn = document.querySelector('.withdraw-btn');
+                // Get the necessary elements
+                const topUpWithdrawInput = document.getElementById('top-up-withdraw-input');
+                const balanceElement = document.getElementById('balance');
+                const topUpBtn = document.querySelector('.top-up-btn');
+                const withdrawBtn = document.querySelector('.withdraw-btn');
 
-            let balance = 10000;
-            let totalTopUp = 0;
-            let totalWithdraw = 0;
+                let balance = 10000;
+                let totalTopUp = 0;
+                let totalWithdraw = 0;
 
-            topUpBtn.addEventListener('click', handleTopUp);
-            withdrawBtn.addEventListener('click', handleWithdraw);
+                topUpBtn.addEventListener('click', handleTopUp);
+                withdrawBtn.addEventListener('click', handleWithdraw);
 
-            function handleTopUp() {
-            const amount = parseFloat(topUpWithdrawInput.value);
-            if (isNaN(amount) || amount <= 0) {
-                alert('Please enter a valid positive amount to top up.');
-                return;
-            }
+                function handleTopUp() {
+                    const amount = parseFloat(topUpWithdrawInput.value);
+                    if (isNaN(amount) || amount <= 0) {
+                        alert('Please enter a valid positive amount to top up.');
+                        return;
+                    }
 
-            balance += amount;
-            totalTopUp += amount;
-            updateBalance();
-            topUpWithdrawInput.value = '';
-            }
+                    balance += amount;
+                    totalTopUp += amount;
+                    updateBalance();
+                    topUpWithdrawInput.value = '';
+                }
+                function handleWithdraw() {
+                    const amount = parseFloat(topUpWithdrawInput.value);
+                    if (isNaN(amount) || amount <= 0) {
+                        alert('Please enter a valid positive amount to withdraw.');
+                        return;
+                    }
 
-            function handleWithdraw() {
-            const amount = parseFloat(topUpWithdrawInput.value);
-            if (isNaN(amount) || amount <= 0) {
-                alert('Please enter a valid positive amount to withdraw.');
-                return;
-            }
+                    if (balance - amount < 0) {
+                        alert('Insufficient funds. Cannot withdraw more than the current balance.');
+                        return;
+                    }
 
-            if (balance - amount < 0) {
-                alert('Insufficient funds. Cannot withdraw more than the current balance.');
-                return;
-            }
-
-            balance -= amount;
-            totalWithdraw += amount;
-            updateBalance();
-            topUpWithdrawInput.value = '';
-            }
-
-            function updateBalance() {
-            balanceElement.textContent = `Balance: $${balance}`;
-            document.getElementById('total-top-up').textContent = ` $${totalTopUp}`;
-            document.getElementById('total-withdrawal').textContent = ` $${totalWithdraw}`;
-            }
-        });
-        </script>
+                    balance -= amount;
+                    totalWithdraw += amount;
+                    updateBalance();
+                    topUpWithdrawInput.value = '';
+                }
+                function updateBalance() {
+                    balanceElement.textContent = `Balance: $${balance}`;
+                    document.getElementById('total-top-up').textContent = ` $${totalTopUp}`;
+                    document.getElementById('total-withdrawal').textContent = ` $${totalWithdraw}`;
+                }
+            });
+        </script> -->
         <!-- This is the end of portfolio section-->
 
         <div id="trade" data-tab-content>
@@ -191,7 +188,7 @@
 
                     </div>
                     <div trading-attr class="time">
-                        <label for="Time Frame">Time Frame: </label>
+                        <label for="Time-Frame">Time Frame: </label>
                         <select option-box id="Time-Frame" placeholder="Select a Time Frame">
                             <option class="time-frame-options" value="TIME_SERIES_INTRADAY_EXTENDED">15 min</option>
                             <option class="time-frame-options" value="TIME_SERIES_DAILY_ADJUSTED">Day</option>
