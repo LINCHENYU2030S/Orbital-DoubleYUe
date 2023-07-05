@@ -37,142 +37,165 @@
         <!-- This is the portfolio section -->
         <div id="portfolio" data-tab-content>
             <div class="portfolio-container">
-            <h1>Portfolio</h1>
-            <div class="balance" id="balance">
-                <h2>Current Balance</h2>
-                <p id="current-balance"></p>
-            </div>
-            <div class="transactions">
-                <div class="top-up">
-                <h3>Total Top-up</h3>
-                <p id="total-top-up">$0</p>
+                <h1>Portfolio</h1>
+                <div class="balance" id="balance">
+                    <h2>Current Balance</h2>
+                    <p id="current-balance"></p>
                 </div>
-                <div class="withdrawal">
-                <h3>Total Withdrawal</h3>
-                <p id="total-withdrawal">$0</p>
+                <div class="transactions">
+                    <div class="top-up">
+                    <h3>Total Top-up</h3>
+                    <p id="total-top-up">$0</p>
+                    </div>
+                    <div class="withdrawal">
+                    <h3>Total Withdrawal</h3>
+                    <p id="total-withdrawal">$0</p>
+                    </div>
+                    <div class="profit-loss">
+                    <h3>Total Profit/Loss</h3>
+                    <p id="total-profit-loss">$0</p>
+                    </div>
                 </div>
-                <div class="profit-loss">
-                <h3>Total Profit/Loss</h3>
-                <p id="total-profit-loss">$0</p>
+                <div class="buttons">
+                    <input type="number" placeholder="Enter an amount to top-up / withdraw" id="top-up-withdraw-input">
+                    <button id="top-up-button" class="top-up-btn">Top-up</button>
+                    <button id="withdraw-button" class="withdraw-btn">Withdraw</button>
                 </div>
             </div>
-            <div class="buttons">
-                <input type="number" placeholder="Enter an amount to top-up / withdraw" id="top-up-withdraw-input">
-                <button id="top-up-button" class="top-up-btn">Top-up</button>
-                <button id="withdraw-button" class="withdraw-btn">Withdraw</button>
-            </div>
+            <div id="portfolio-stock-table-container">
+                <table id="portfolio-stock-table">
+                    <!-- <thead>
+                        <tr class="portfolio-stock-table-headings">
+                            <th>No.</th>
+                            <th>Stock</th>
+                            <th>Type</th>
+                            <th>Time Frame</th>
+                            <th>Size</th>
+                            <th>Current Price</th>
+                            <th>Purchase Price</th>
+                            <th>Profit/Loss</th>
+                        </tr>
+                    </thead> -->
+                    <tbody>
+                        <tr class="portfolio-stock-table-headings">
+                            <th>No.</th>
+                            <th>Stock</th>
+                            <th>Type</th>
+                            <th>Time Frame</th>
+                            <th>Size</th>
+                            <th>Current Price</th>
+                            <th>Purchase Price</th>
+                            <th>Profit/Loss</th>
+                        </tr>
+
+                    </tbody>
+                </table>
             </div>
         </div>
         <style>
             /* Portfolio section styles */
-            .portfolio-container {
-            padding: 20px;
-            text-align: center;
+            .tab-content #portfolio .portfolio-container {
+                /* background-color: red; */
+                padding: 20px;
+                text-align: center;
+                position: relative;
+                top: -110px;
             }
-
             .balance {
             margin-bottom: 20px;
             }
-
             .balance h2 {
             font-size: 24px;
             margin-bottom: 10px;
             }
-
             .transactions {
             display: flex;
             justify-content: space-around;
             margin-bottom: 20px;
             }
-
             .transactions div {
             flex-basis: 33.33%;
             }
-
             .transactions h3 {
             font-size: 18px;
             margin-bottom: 5px;
             }
-
             .buttons {
             display: flex;
             justify-content: center;
             }
-
             .buttons button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin: 0 10px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                margin: 0 10px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                border-radius: 5px;
+                cursor: pointer;
             }
-
             .buttons button:hover {
-            background-color: #45a049;
+                background-color: #45a049;
             }
             #top-up-withdraw-input {
                 margin-right: 10px;
                 padding: 5px;
-                width: 200px;
+                width: 250px;
             }
+
+            .tab-content #portfolio #portfolio-stock-table-container {
+                /* background-color: red; */
+                display: block;
+                position: relative;
+                left: -90px;
+                top: -100px;
+                overflow-y: auto;
+                width: 1100px;
+                height: 450px;
+            }
+            #portfolio-stock-table {
+                border: 2px solid rgb(84, 84, 84);
+                background-color: white;
+                color: black;
+                font-size: 20px;
+                position: absolute; 
+                border-collapse: collapse;
+                width: 100%;
+                height: 100%;
+                empty-cells: show;
+            }
+            #portfolio-stock-table tr.unused {
+                height: 34px;
+            }
+            #portfolio-stock-table th {
+                border: 2px solid rgb(84, 84, 84);
+                font-weight: 900;
+                text-align: center;
+                vertical-align: middle;
+                padding: 2px;
+            }
+            #portfolio-stock-table td {
+                /* background-color: red; */
+                border: 2px solid rgb(84, 84, 84);
+                vertical-align: middle;
+                text-align: center;
+                padding: 3px 8px;
+            }
+            #portfolio-stock-table tbody tr td:nth-child(2) {
+                text-align: left;
+            }
+            #portfolio-stock-table tbody tr :nth-child(3) {
+                width: 60px;
+            }
+            #portfolio-stock-table tbody tr :nth-child(4) {
+                width: 60px;
+            }
+            
+
         </style>
-        <!-- <script>
-            $(document).ready(function() {
-                // Get the necessary elements
-                const topUpWithdrawInput = document.getElementById('top-up-withdraw-input');
-                const balanceElement = document.getElementById('balance');
-                const topUpBtn = document.querySelector('.top-up-btn');
-                const withdrawBtn = document.querySelector('.withdraw-btn');
-
-                let balance = 10000;
-                let totalTopUp = 0;
-                let totalWithdraw = 0;
-
-                topUpBtn.addEventListener('click', handleTopUp);
-                withdrawBtn.addEventListener('click', handleWithdraw);
-
-                function handleTopUp() {
-                    const amount = parseFloat(topUpWithdrawInput.value);
-                    if (isNaN(amount) || amount <= 0) {
-                        alert('Please enter a valid positive amount to top up.');
-                        return;
-                    }
-
-                    balance += amount;
-                    totalTopUp += amount;
-                    updateBalance();
-                    topUpWithdrawInput.value = '';
-                }
-                function handleWithdraw() {
-                    const amount = parseFloat(topUpWithdrawInput.value);
-                    if (isNaN(amount) || amount <= 0) {
-                        alert('Please enter a valid positive amount to withdraw.');
-                        return;
-                    }
-
-                    if (balance - amount < 0) {
-                        alert('Insufficient funds. Cannot withdraw more than the current balance.');
-                        return;
-                    }
-
-                    balance -= amount;
-                    totalWithdraw += amount;
-                    updateBalance();
-                    topUpWithdrawInput.value = '';
-                }
-                function updateBalance() {
-                    balanceElement.textContent = `Balance: $${balance}`;
-                    document.getElementById('total-top-up').textContent = ` $${totalTopUp}`;
-                    document.getElementById('total-withdrawal').textContent = ` $${totalWithdraw}`;
-                }
-            });
-        </script> -->
         <!-- This is the end of portfolio section-->
 
         <div id="trade" data-tab-content>
@@ -190,6 +213,7 @@
                     <div trading-attr class="time">
                         <label for="Time-Frame">Time Frame: </label>
                         <select option-box id="Time-Frame" placeholder="Select a Time Frame">
+                            <option class="time-frame-options" value="" disabled selected hidden>Select a time frame</option>
                             <option class="time-frame-options" value="TIME_SERIES_INTRADAY_EXTENDED">15 min</option>
                             <option class="time-frame-options" value="TIME_SERIES_DAILY_ADJUSTED">Day</option>
                             <option class="time-frame-options" value="TIME_SERIES_WEEKLY">Week</option>
@@ -199,6 +223,10 @@
                     <div trading-attr class="size-option">
                         <label for="trade-options-size">Size: </label>
                         <input option-box id="trade-options-size" type="number" placeholder="Enter a size">
+                    </div>
+                    <div trading-attr class="price-option">
+                        <label for="trade-options-price">Price($): </label>
+                        <input option-box id="trade-options-price" type="number" placeholder="Enter purchase price">
                     </div>
                     <div trading-attr class="stoploss-option">
                         <label for="trade-options-stoploss">Stop Loss($): </label>
@@ -211,13 +239,16 @@
                     <div trading-attr class="type-option">
                         <label for="stock-type">Type: </label>
                         <select option-box id="stock-type">
-                            <option value="long">Long</option>
-                            <option value="short">Short</option>
+                            <option value="" disabled selected hidden>Select an order type</option>
+                            <option value="Long">Long</option>
+                            <option value="Short">Short</option>
                         </select>
                     </div>
+                    <div id="view-chart-button" class="trade-window-buttons">View Chart</div>
+                    <div id="confirm-order-button" class="trade-window-buttons">Confirm</div>
                 </div>
-                <div id="view-chart-button" class="trade-window-buttons">View Chart</div>
-                <div id="confirm-order-button" class="trade-window-buttons">Confirm</div>
+                <!-- <div id="view-chart-button" class="trade-window-buttons">View Chart</div>
+                <div id="confirm-order-button" class="trade-window-buttons">Confirm</div> -->
             </div>
             <style>
                 #dashboard {
@@ -237,11 +268,9 @@
                     list-style-type: none;
                     padding: 0;
                     margin: 0;
-                    overflow-x: scroll;
-                    overflow-y: scroll;
                     position: fixed;
                     left: 20%;
-                    right: 20%;
+                    right: 30%;
                     top: 300px;
                     text-align: left;
                     z-index: 1;
@@ -254,88 +283,18 @@
                     background-color: rgb(0, 0, 0, 0.8);
                     border: 1px solid white;
                     width: 120%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
                 #searchResults option:hover {
                     background-color: rgba(154, 154, 154, 0.8);  
+                    overflow: visible;
                 }
 
                 .active {
                     display: block;
                 }
             </style>
-            <script>
-
-                $(document).ready(function() {
-                    const apiKey = "C3XZTDGXRR6K8AZS";
-                    const searchInput = $("#searchInput");
-                    const searchResults = $("#searchResults");
-
-                    // Function to fetch search results from Alpha Vantage API
-                    function fetchSearchResults(keyword) {
-                        const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${keyword}&apikey=${apiKey}`;
-                        
-                        // Make the API request
-                        $.get(url, function(data) {
-                            searchResults.empty();
-                            const results = data.bestMatches;
-                            results.forEach(function(result) {
-                                const symbol = result["1. symbol"];
-                                const name = result["2. name"];
-                                // const listItem = `<li>${symbol} - ${name}</li>`;
-                                const listItem = `<option><p>${symbol} - ${name}</p></option>`;
-                                const $listItem = $(listItem);
-                                
-                                // Add click event handler to the autocomplete item
-                                $listItem.on("click", function() {
-                                    // Update the input value with the selected option
-                                    searchInput.val(symbol);
-                                    
-                                    // Perform desired action when an item is clicked
-                                    console.log("Selected:", symbol);
-                                    // You can use the selected symbol or perform any other action here
-                                    searchResults.empty();
-                                });
-                                
-                                searchResults.append($listItem);
-                            });
-                        });
-                    }
-
-                    // Event handler for input changes
-                    var delay = null;
-                    function search() {
-                        clearTimeout(delay);
-
-                        const keyword = searchInput.val();
-                        delay = setTimeout(function(){fetchSearchResults(keyword);}, 300);
-                    }
-                    searchInput.keyup(search)
-                    searchInput.focusin(search);
-
-                    var focusOutDelay = null;
-                    searchInput.focusout(() => {
-                        clearTimeout(focusOutDelay);
-                        focusOutDelay = setTimeout(function(){searchResults.empty();}, 300);
-                    })
-                });
-
-                $(document).ready(function() {
-                    // Event handler for "View Chart" button click
-                    $("#view-chart-button").click(function() {
-                        // Get the selected stock and time frame
-                        const selectedStock = $("#searchInput").val();
-                        const selectedTimeFrame = $("#Time-Frame").val();
-
-                        // Store the values in localStorage
-                        localStorage.setItem("selectedStock", selectedStock);
-                        localStorage.setItem("selectedTimeFrame", selectedTimeFrame);
-
-                        // Redirect to the other HTML file
-                        window.open("visualization.html");
-                    });
-                });
-                
-            </script>
         </div>
 
         <div id="settings" data-tab-content>

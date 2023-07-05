@@ -230,6 +230,9 @@
                     else if (errorCode == "auth/wrong-password") {
                         alert("Incorrect Password!");
                     }
+                    else if (errorCode == "auth/network-request-failed") {
+                        alert("Your device is not connected to the Internet!");
+                    }
                     else {
                         alert("login failed " + errorCode + " " + errorMessage);
                     }

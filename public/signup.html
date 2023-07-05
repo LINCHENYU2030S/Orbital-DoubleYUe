@@ -227,7 +227,11 @@
             async function initializeDB(userEmail) {
                 try {
                     let docRef = await setDoc(doc(db, userEmail, "Portfolio"), {
-                        balance: 10_000
+                        balance: 10_000,
+                        numOfStocks: 0
+                    });
+                    await setDoc(doc(db, userEmail, "Portfolio", "Stocks", "?"), {
+
                     });
                     console.log("Document written with ID: "+ userEmail);
 
@@ -252,6 +256,7 @@
                             alert("Sorry, your browser does not support web storage...");
                         }
                         await initializeDB(userEmail);
+                        alert("user created!");
                         await console.log("user created!");
                         await window.location.assign("dashboard.html");
                     })();

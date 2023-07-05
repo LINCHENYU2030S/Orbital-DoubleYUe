@@ -98,7 +98,6 @@ body {
 /* Trade */
 .tab-content #trade .trade-window {
     font-size: 40px;
-    color: aliceblue;
     position: absolute;
     left: 30px;
     right: 30px;
@@ -115,6 +114,7 @@ body {
     right: 0px;
     text-align: center;
     font-size: 30px;
+    color: aliceblue;
 }
 .tab-content #trade .trade-window .options-container {
     /* background-color: blue; */
@@ -124,47 +124,88 @@ body {
     top: 90px;
     bottom: 10%;
     font-size: 25px;
+    max-height: 100%;
+    overflow-y: auto;
 }
 .tab-content #trade .trade-window .options-container [trading-attr] {
     /* background-color: red; */
     margin: 0px 0px 20px 0px;
+    position: relative;
+    white-space: nowrap;
 }
 .tab-content #trade .trade-window .options-container [option-box] {
     all: unset;
     background-color: transparent;
     border: 2px solid white;
     font-size: 20px;
-    position: absolute;
-    left: 25%;
-    right: 0px;
+    position: relative;
+    width: 458px;
     padding: 2px 3px;
     margin: 0px;
 }
 .tab-content #trade .trade-window .options-container [option-box]:hover {
     background-color: rgb(255, 255, 255, 0.5);
 }
-.tab-content #trade .trade-window .options-container select[option-box] {
-    position: absolute;
-    left: 25%;
-    right: 0px;
+.tab-content #trade .trade-window .options-container [option-box]#searchInput {
+    position: relative;
+    left: 82.5px;
     border: 2px solid white;
+    color: aliceblue;
+}
+.tab-content #trade .trade-window .options-container [option-box]#trade-options-size {
+    position: relative;
+    left: 96px;
+    border: 2px solid white;
+    color: aliceblue;
+}
+.tab-content #trade .trade-window .options-container [option-box]#trade-options-price {
+    position: relative;
+    left: 58.5px;
+    border: 2px solid white;
+    color: aliceblue;
+}
+.tab-content #trade .trade-window .options-container [option-box]#trade-options-stoploss {
+    position: relative;
+    left: 10.5px;
+    border: 2px solid white;
+    color: aliceblue;
+}
+.tab-content #trade .trade-window .options-container select[option-box]#Time-Frame {
+    position: relative;
+    left: 17px;
+    border: 2px solid white;
+    color: aliceblue;
+}
+.tab-content #trade .trade-window .options-container select[option-box]#stock-type {
+    position: relative;
+    left: 89.5px;
+    border: 2px solid white;
+    color: aliceblue;
 }
 .tab-content #trade .trade-window .options-container select[option-box]:hover {
     cursor: pointer;
     background-color: rgb(255, 255, 255, 0.5);
 }
 .tab-content #trade .trade-window .options-container ::placeholder {
-    color: #a7a7a7;
+    /* color: #a7a7a7; */
+    color: aliceblue;
 }
 .tab-content #trade .trade-window #confirm-order-button {
-    position: absolute;
+    /* position: absolute;
     right: 10%;
-    bottom: 10%;
+    bottom: 10%; */
+    position: relative;
+    top: 0px;
+    left: 450px;
+    width: 150px;
 }
 .tab-content #trade .trade-window #view-chart-button {
-    position: absolute;
+    /* position: absolute;
     left: 10%;
-    bottom: 10%;
+    bottom: 10%; */
+    position: relative;
+    width: 150px;
+    top: 35px;
 }
 .tab-content #trade .trade-window .trade-window-buttons {
     text-align: center;
