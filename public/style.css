@@ -150,59 +150,46 @@ body {
     position: relative;
     left: 82.5px;
     border: 2px solid white;
-    color: aliceblue;
 }
 .tab-content #trade .trade-window .options-container [option-box]#trade-options-size {
     position: relative;
     left: 96px;
     border: 2px solid white;
-    color: aliceblue;
 }
 .tab-content #trade .trade-window .options-container [option-box]#trade-options-price {
     position: relative;
     left: 58.5px;
     border: 2px solid white;
-    color: aliceblue;
 }
 .tab-content #trade .trade-window .options-container [option-box]#trade-options-stoploss {
     position: relative;
     left: 10.5px;
     border: 2px solid white;
-    color: aliceblue;
 }
 .tab-content #trade .trade-window .options-container select[option-box]#Time-Frame {
     position: relative;
     left: 17px;
     border: 2px solid white;
-    color: aliceblue;
 }
 .tab-content #trade .trade-window .options-container select[option-box]#stock-type {
     position: relative;
     left: 89.5px;
     border: 2px solid white;
-    color: aliceblue;
 }
 .tab-content #trade .trade-window .options-container select[option-box]:hover {
     cursor: pointer;
-    background-color: rgb(255, 255, 255, 0.5);
 }
 .tab-content #trade .trade-window .options-container ::placeholder {
     /* color: #a7a7a7; */
     color: aliceblue;
 }
 .tab-content #trade .trade-window #confirm-order-button {
-    /* position: absolute;
-    right: 10%;
-    bottom: 10%; */
     position: relative;
     top: 0px;
     left: 450px;
     width: 150px;
 }
 .tab-content #trade .trade-window #view-chart-button {
-    /* position: absolute;
-    left: 10%;
-    bottom: 10%; */
     position: relative;
     width: 150px;
     top: 35px;
@@ -333,7 +320,6 @@ body {
     color: #a7a7a7;
     position: absolute;
 }
-
 #change-password-page-back-button {
     position: absolute;
     bottom: 120px;
@@ -353,14 +339,17 @@ body {
 .tab-content #guide {
     font-size: 40px;
     color: aliceblue;
+
     position: absolute;
     left: 30px;
     right: 30px;
     top: 16px;
     bottom: 14px;
+
     background-color: rgba(0, 0, 0, 0.8);
     padding: 30px 40px;
     border: 2px solid #00fbff;
+    overflow: auto;
 } 
 .tab-content #guide .guide-window .unactive[guide-content] {
     display: none;

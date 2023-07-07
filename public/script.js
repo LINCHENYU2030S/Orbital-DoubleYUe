@@ -6,7 +6,8 @@ import {
     signOut, 
     updatePassword,
     signInWithEmailAndPassword,
-    onAuthStateChanged
+    onAuthStateChanged,
+    deleteUser
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { 
     getFirestore,
@@ -18,7 +19,8 @@ import {
     collection,
     updateDoc,
     increment,
-    onSnapshot
+    onSnapshot,
+    deleteDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 
@@ -46,12 +48,12 @@ const tabContents = document.querySelectorAll('[data-tab-content]');
 let user = null;
 let userEmail = null;
 let balance = null;
+let prevNumOfStocks = null;
 let numOfStocks = null;
 const topUpWithdrawInput = document.getElementById('top-up-withdraw-input');
 const balanceElement = document.getElementById('balance');
 const topUpBtn = document.querySelector('.top-up-btn');
 const withdrawBtn = document.querySelector('.withdraw-btn');
-let currStockTableCapacity = 20;
 let currStockTableColNumber = 8;
 
 // TRADE
@@ -71,26 +73,25 @@ async function initializeAndUpdateUser() {
     // Get User Current Portfolio Balance
     const portfolioDocRef = doc(db, userEmail, "Portfolio");
     const docSnap = await getDoc(portfolioDocRef);
-    const docData = await docSnap.data();
-    balance = await docData.balance;
-    numOfStocks = await docData.numOfStocks;
+    const docData = docSnap.data();
+    balance = docData.balance;
+    numOfStocks = docData.numOfStocks;
+    prevNumOfStocks = numOfStocks;
     balanceElement.innerHTML = "Balance: $" + balance;
     console.log("user current balance is " + balance);
 }
-
-async function initializePortfolioTable () {
+async function initializePortfolioTable() {
     const portfolioStockTable = document.querySelector('#portfolio-stock-table tbody');
     console.log("user current owned number of stocks is " + numOfStocks);
     const stockColRef = collection(db, userEmail, "Portfolio", "Stocks");
-    const docsSnap = await getDocs(stockColRef);
 
-    for (let i = 0; i < currStockTableCapacity; i++) {
+    for (let i = 1; i <= numOfStocks; i++) {
         portfolioStockTable.insertRow();
     }
 
     // Initialize Realtime Listener Object to Update Table whenever there is a change to the database
     onSnapshot(stockColRef, (snapshot) => {
-        for (let i = 1; i <= currStockTableCapacity; i++) {
+        for (let i = 1; i <= prevNumOfStocks; i++) {
             portfolioStockTable.deleteRow(1);
         }
         let rowNumber = 0;
@@ -114,77 +115,63 @@ async function initializePortfolioTable () {
                 console.log("filled row inserted");
             }
         });
-        if (numOfStocks < currStockTableCapacity) {
-            for (let i = 0; i < currStockTableCapacity - numOfStocks; i++) {
-                const row = portfolioStockTable.insertRow(-1);
-                row.classList.add("unused");
-                console.log("empty row inserted");
-                for (let j = 0; j < currStockTableColNumber; j++) {
-                    row.insertCell();
-                }
-            }
-        }
     });
 }
-
-function login(email, password) {
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // alert("User email is " + email);
-            user = userCredential.user;
-            console.log("User state is signed in!");
-            userEmail = user.email;
-
-            (async () => {
+async function login(email, password) {
+    await signInWithEmailAndPassword(auth, email, password)
+            .then(async (userCredential) => {
+                // alert("User email is " + email);
+                user = userCredential.user;
+                userEmail = user.email;
+                console.log("User state is signed in!");
                 // Get User Current Portfolio Balance
                 await initializeAndUpdateUser();
 
                 // Initialize User Portfolio Stock Table (IDK WHETHER THIS THING NEED ASYNC OR NOT !!!!!! ans : NEED)
                 await initializePortfolioTable();
-            })();
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
 
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-
-            if (errorCode == "auth/invalid-email") {
-                alert("Please Enter a Valid Email!");
-            }
-            else if (errorCode == "auth/missing-password") {
-                alert("Please Enter Your Password!");
-            } 
-            else if (errorCode == "auth/user-not-found") {
-                alert("User Does Not Exist!");
-            } 
-            else if (errorCode == "auth/wrong-password") {
-                alert("Incorrect Password!");
-            }
-            else {
-                alert("login failed " + errorCode + " " + errorMessage);
-            }
-            // For debugging purposes
-            
-            console.log(errorCode + errorMessage);
-            return;
-        });
+                if (errorCode == "auth/invalid-email") {
+                    alert("Please Enter a Valid Email!");
+                }
+                else if (errorCode == "auth/missing-password") {
+                    alert("Please Enter Your Password!");
+                } 
+                else if (errorCode == "auth/user-not-found") {
+                    alert("User Does Not Exist!");
+                } 
+                else if (errorCode == "auth/wrong-password") {
+                    alert("Incorrect Password!");
+                }
+                else {
+                    alert("login failed " + errorCode + " " + errorMessage);
+                }
+                // For debugging purposes
+                
+                console.log(errorCode + errorMessage);
+                return;
+            });
 }
 function checkAuth() {
     if (sessionStorage.email && sessionStorage.password) {
         document.body.classList.remove("pending");
-        login(sessionStorage.email, sessionStorage.password);
+        (async () => await login(sessionStorage.email, sessionStorage.password))();
     } else {
         alert("Please login first!");
         window.location.replace("login.html");
     }
-    return true;
 }
 
+
+
+// MAIN FUNCTION
 
 // Check if user is logged in or not
 // if not logged in, nav to login page
 checkAuth();
-
 
 // portfolioPart
 let totalTopUp = 0;
@@ -196,14 +183,14 @@ withdrawBtn.addEventListener('click', handleWithdraw);
 function updateBalance(newBalance) {
     balance = newBalance;
     balanceElement.textContent = `Balance: $` + balance;
+    document.getElementById('total-top-up').textContent = ` $` + totalTopUp;
+    document.getElementById('total-withdrawal').textContent = ` $` + totalWithdraw;
     (async () => {
         const portfolioDocRef = doc(db, userEmail, "Portfolio");
         await updateDoc(portfolioDocRef, {
             "balance": balance
         });
     })();
-    document.getElementById('total-top-up').textContent = ` $` + totalTopUp;
-    document.getElementById('total-withdrawal').textContent = ` $` + totalWithdraw;
 }
 function handleTopUp() {
     const amount = parseFloat(topUpWithdrawInput.value);
@@ -303,6 +290,7 @@ $(document).ready(function() {
             const results = data.bestMatches;
             if (!results) return;
             results.forEach(function(result) {
+                console.log("search results");
                 const symbol = result["1. symbol"];
                 const name = result["2. name"];
                 // const listItem = `<li>${symbol} - ${name}</li>`;
@@ -323,6 +311,7 @@ $(document).ready(function() {
                 
                 searchResults.append($listItem);
             });
+            console.log("Results shown");
         });
     }
 
@@ -330,22 +319,17 @@ $(document).ready(function() {
     var delay = null;
     function search() {
         clearTimeout(delay);
-
         const keyword = searchInput.val();
-        delay = setTimeout(function(){fetchSearchResults(keyword);}, 300);
+        if (!keyword) {
+            searchResults.empty();
+            console.log("Results Emptied");
+            return;
+        }
+        delay = setTimeout(() => fetchSearchResults(keyword), 300);
     }
     searchInput.keyup(search)
     searchInput.focusin(search);
-
-    var focusOutDelay = null;
-    searchInput.focusout(() => {
-        clearTimeout(focusOutDelay);
-        focusOutDelay = setTimeout(function(){searchResults.empty();}, 300);
-    })
-
-
-
-
+    document.addEventListener("click", () => searchResults.empty());
 
     // Event handler for "View Chart" button click
     $("#view-chart-button").click(function() {
@@ -357,7 +341,7 @@ $(document).ready(function() {
         localStorage.setItem("selectedStock", selectedStock);
         localStorage.setItem("selectedTimeFrame", selectedTimeFrame);
 
-        // Redirect to the other HTML file
+        // Redirect to the other HTML file / Open a new tab
         window.open("visualization.html");
     });
 
@@ -389,52 +373,45 @@ $(document).ready(function() {
         
         timeFrame = hashTimeFrame(timeFrame);
 
+        // Placing the order
         (async () => {
             const portfolioDocRef = doc(db, userEmail, "Portfolio");
+            const docSnap = await getDoc(portfolioDocRef);
+            const docData = docSnap.data();
+            const balance = docData.balance;
 
-            await (async () => {
-                const docSnap = await getDoc(portfolioDocRef);
-                const docData = await docSnap.data();
-                const balance = await docData.balance;
+            if (balance - size * price < 0) {
+                alert("Insufficient funds. This order has exceeded the current balance");
+                return;
+            }
 
-                if (balance - size * price < 0) {
-                    alert("Insufficient funds. This order has exceeded the current balance");
-                    return;
-                }
+            await (async () => updateBalance(balance - size * price))();
+            prevNumOfStocks = numOfStocks;
 
-                await (async () => updateBalance(balance - size * price))();
+            await updateDoc(portfolioDocRef, {
+                "numOfStocks": ++numOfStocks
+            });
 
-                await updateDoc(portfolioDocRef, {
-                    "numOfStocks": ++numOfStocks
-                });
+            await addDoc(collection(db, userEmail, "Portfolio", "Stocks"), {
+                "stock": stock,
+                "timeFrame": timeFrame,
+                "size": size,
+                "price": price,
+                "stopLoss": stopLoss,
+                "takeProfit": takeProfit,
+                "type": type 
+            });
 
-                await setDoc(doc(db, userEmail, "Portfolio", "Stocks", stock), {
-                    "stock": stock,
-                    "timeFrame": timeFrame,
-                    "size": size,
-                    "price": price,
-                    "stopLoss": stopLoss,
-                    "takeProfit": takeProfit,
-                    "type": type 
-                });
+            alert("Order is Placed!");
+            console.log("Order is Placed!");
 
-                alert("Order is Placed!");
-                console.log("Order is Placed!");
-
-                // RESET ALL INPUTS
-                resetInputs();
-
-                // await initializePortfolioTable();
-            })();
-
-
+            // RESET ALL INPUTS
+            resetInputs();
         })();
 
     });
     
-
 });
-
 
 
 
@@ -457,7 +434,7 @@ function logOut() {
         // Sign-out successful.
         alert('User logged out!');
         localStorage.clear();
-        window.location.assign("login.html");
+        window.location.replace("login.html");
     }).catch((error) => {
         // An error happened.
     });
@@ -493,23 +470,25 @@ if (changePasswordPageConfirmChangesButton) {
             return;
         }
 
-        updatePassword(user, password1).then(() => {
-            alert("User Password Successfully Updated!");
-        }).catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
+        updatePassword(user, password1)
+            .then(() => {
+                alert("User Password Successfully Updated!");
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
 
-            if (errorCode == "auth/weak-password") {
-                alert("Password should be at least 6 characters!");
-            } 
-            else if (errorCode == "auth/requires-recent-login") {
-                alert("Time session expired, please login again!");
-            }
-            else {
-                alert("login failed " + errorCode + " " + errorMessage);
-            }
-            console.log(errorCode + errorMessage);
-        });
+                if (errorCode == "auth/weak-password") {
+                    alert("Password should be at least 6 characters!");
+                } 
+                else if (errorCode == "auth/requires-recent-login") {
+                    alert("Time session expired, please login again!");
+                }
+                else {
+                    alert("login failed " + errorCode + " " + errorMessage);
+                }
+                console.log(errorCode + errorMessage);
+            });
 
     });
 }
