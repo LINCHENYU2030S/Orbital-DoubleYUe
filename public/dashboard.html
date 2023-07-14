@@ -7,6 +7,13 @@
     <title>DoubleYUe</title>
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.anychart.com/releases/8.11.0/css/anychart-ui.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.anychart.com/releases/8.11.0/fonts/css/anychart-font.min.css" rel="stylesheet" type="text/css">  
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-stock.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-data-adapter.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-ui.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.0/themes/dark_glamour.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
@@ -71,13 +78,14 @@
                             <th>Type</th>
                             <th>Time Frame</th>
                             <th>Size</th>
-                            <th>Current Price</th>
                             <th>Purchase Price</th>
+                            <th>Current Price</th>
                             <th>Profit/Loss</th>
                         </tr>
 
                     </tbody>
                 </table>
+                <div id="no-stock-holdings-description" class="active">You currently have no holdings</div>
             </div>
         </div>
         <style>
@@ -144,6 +152,16 @@
                 width: 1100px;
                 height: 450px;
             }
+            #no-stock-holdings-description.unactive {
+                display: none;
+            }
+            #no-stock-holdings-description.active {
+                color: black;
+                position: relative;
+                text-align: center;
+                top: 40%;
+                font-size: 30px;
+            }
             #portfolio-stock-table {
                 border: 2px solid rgb(84, 84, 84);
                 background-color: white;
@@ -203,7 +221,7 @@
                         <label for="Time-Frame">Time Frame: </label>
                         <select option-box id="Time-Frame" placeholder="Select a Time Frame">
                             <option class="time-frame-options" value="" disabled selected hidden>Select a time frame</option>
-                            <option class="time-frame-options" value="TIME_SERIES_INTRADAY_EXTENDED">15 min</option>
+                            <option class="time-frame-options" value="TIME_SERIES_INTRADAY">15 min</option>
                             <option class="time-frame-options" value="TIME_SERIES_DAILY_ADJUSTED">Day</option>
                             <option class="time-frame-options" value="TIME_SERIES_WEEKLY">Week</option>
                             <option class="time-frame-options" value="TIME_SERIES_MONTHLY">Month</option>
