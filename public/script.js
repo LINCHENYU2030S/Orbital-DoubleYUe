@@ -128,12 +128,12 @@ async function initializePortfolioTable() {
         let rowNumber = 0;
         snapshot.docs.forEach((doc) => {
             if (doc.id != "?") {
-                rowNumber++;
                 const docData = doc.data();
                 const row = portfolioStockTable.insertRow(-1);
                 for (let j = 0; j < currStockTableColNumber; j++) {
                     row.insertCell();
                 }
+                row.cells[0].innerHTML = ++rowNumber;
 
                 var url = 'https://www.alphavantage.co/query?function=' + docData.timeFrame  + '&symbol=' + docData.stockSymbol + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
 
@@ -145,9 +145,8 @@ async function initializePortfolioTable() {
                 anychart.onDocumentReady(function() {
                     anychart.data.loadCsvFile(url, (data) => {
                         const currentPrice = Number(getCurrentPrice(data.slice(38)));
-
                         const cells = row.cells;
-                        cells[0].innerHTML = rowNumber;
+                        // cells[0].innerHTML = ++rowNumber;
                         cells[1].innerHTML = docData.stockSymbol + " - " + docData.stockName;
                         cells[2].innerHTML = docData.type;
                         cells[3].innerHTML = docData.timeFrameDisplay;
