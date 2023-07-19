@@ -386,7 +386,7 @@ $(document).ready(function() {
         delay = setTimeout(() => fetchSearchResults(keyword), 300);
     }
     searchInput.keyup(search)
-    searchInput.focusin(search);
+    searchInput.focusin(search);kakahh
     document.addEventListener("click", () => searchResults.empty());
 
     // Event handler for "View Chart" button click
