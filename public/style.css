@@ -104,6 +104,7 @@ body {
     top: 16px;
     bottom: 0px;
     background-color: rgba(0, 0, 0, 0.8);
+    /* background-color: red; */
     padding: 30px 40px;
     border: 2px solid #00fbff;
 }
@@ -185,14 +186,14 @@ body {
 }
 .tab-content #trade .trade-window #confirm-order-button {
     position: relative;
-    top: 0px;
     left: 450px;
     width: 150px;
+    top: 115px;
 }
 .tab-content #trade .trade-window #view-chart-button {
     position: relative;
     width: 150px;
-    top: 35px;
+    top: 150px;
 }
 .tab-content #trade .trade-window .trade-window-buttons {
     text-align: center;
