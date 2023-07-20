@@ -1,5 +1,5 @@
 // IMPORTS
-
+  
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { 
     getAuth, 
@@ -404,11 +404,30 @@ $(document).ready(function() {
     });
 
     $("#confirm-order-button").click(function() {
+        const selectedStock = $("#searchInput").val();
         let stockSymbol = selectedStockSymbol;
         let stockName = selectedStockName;
         let timeFrame = $("#Time-Frame").val();
         let size = $("#trade-options-size").val();
-        let price = $("#trade-options-price").val();
+
+        const express = require('express');
+        const app = express();
+
+        // Sets the Access-Control-Allow-Origin header to *, which allows any website
+        // to access our server's resources.
+        app.use(function(req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });
+        
+        let price;
+        fetch('https://query1.finance.yahoo.com/v8/finance/chart/AAPL', {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => price = data.chart.result[0].meta.regularMarketPrice)
+        .catch(error => console.error(error));
         let stopLoss = $("#trade-options-stoploss").val();
         let takeProfit = $("#trade-options-takeprofit").val();
         let type = $("#stock-type").val();
@@ -417,13 +436,12 @@ $(document).ready(function() {
             $("#searchInput").val('');
             $("#Time-Frame").val('');
             $("#trade-options-size").val('');
-            $("#trade-options-price").val('');
             $("#trade-options-stoploss").val('');
             $("#trade-options-takeprofit").val('');
             $("#stock-type").val('');
         }
 
-        const invalid = (!stockSymbol) || (!stockName) || (!size) || (!price) || (!stopLoss) || (!takeProfit);
+        const invalid = (!stockSymbol) || (!stockName) || (!size) || (!stopLoss) || (!takeProfit);
 
         if (invalid) {
             alert("Please fill up all the fields!");
