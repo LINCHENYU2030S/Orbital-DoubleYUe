@@ -70,6 +70,8 @@
                 anychart.data.loadCsvFile(
                 url,
                     function (data) {
+                        console.log(data);
+
                         // create a data table with the loaded data
                         var dataTable = anychart.data.table();
                         dataTable.addData(data);

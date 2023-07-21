@@ -69,6 +69,8 @@ const changePasswordPageConfirmChangesButton = document.getElementById('change-p
 const nextBtn = document.getElementById('guide-next-button');
 const backBtn = document.getElementById('guide-back-button');
 
+
+
 function getCurrentPrice(data) {
     const intendedComma = 4;
     let j = 0;
@@ -114,9 +116,11 @@ async function initializePortfolioTable() {
 
     // Initialize Realtime Listener Object to Update Table whenever there is a change to the database
     onSnapshot(stockColRef, (snapshot) => {
+        // Delete current table
         for (let i = 1; i <= prevNumOfStocks; i++) {
             portfolioStockTable.deleteRow(1);
         }
+        // Display "No Stock Holdings" if user has no stock holdings
         if (numOfStocks !== 0) {
             document.getElementById("no-stock-holdings-description").classList.remove("active");
             document.getElementById("no-stock-holdings-description").classList.add("unactive");
@@ -138,7 +142,7 @@ async function initializePortfolioTable() {
                 var url = 'https://www.alphavantage.co/query?function=' + docData.timeFrame  + '&symbol=' + docData.stockSymbol + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
 
                 if (docData.timeFrame == 'TIME_SERIES_INTRADAY') {
-                    url = 'https://www.alphavantage.co/query?function=' + docData.timeFrame + '&symbol=' + docData.stockName + '&interval=15min' + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
+                    url = 'https://www.alphavantage.co/query?function=' + docData.timeFrame + '&symbol=' + docData.stockSymbol + '&interval=15min' + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
                 }
 
                 
@@ -146,14 +150,15 @@ async function initializePortfolioTable() {
                     anychart.data.loadCsvFile(url, (data) => {
                         const currentPrice = Number(getCurrentPrice(data.slice(38)));
                         const cells = row.cells;
-                        // cells[0].innerHTML = ++rowNumber;
                         cells[1].innerHTML = docData.stockSymbol + " - " + docData.stockName;
                         cells[2].innerHTML = docData.type;
                         cells[3].innerHTML = docData.timeFrameDisplay;
                         cells[4].innerHTML = docData.size;
                         cells[5].innerHTML = Number(docData.price).toFixed(4);
                         cells[6].innerHTML = currentPrice.toFixed(4);
-                        const profitLoss = (currentPrice - docData.price).toFixed(4);
+                        const profitLoss = (docData.type == "Long") 
+                            ? (currentPrice - docData.price).toFixed(4)
+                            : (docData.price - currentPrice).toFixed(4);
                         cells[7].innerHTML = profitLoss;
                         if (profitLoss > 0) {
                             cells[7].style.color = '#008000';
@@ -336,18 +341,29 @@ $(document).ready(function() {
 
     // Function to fetch search results from Alpha Vantage API
     function fetchSearchResults(keyword) {
+        console.log("searching...");
         const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${keyword}&apikey=${apiKey}`;
         
         // Make the API request
         $.get(url, function(data) {
             searchResults.empty();
+            console.log("searching for best matches...");
+
+            if (data.Information) {
+                console.log(data.Information);
+            }
+
             const results = data.bestMatches;
+            console.log(results);
+
             if (!results) return;
+
             results.forEach(function(result) {
                 console.log("search results");
                 const symbol = result["1. symbol"];
                 const name = result["2. name"];
                 // const listItem = `<li>${symbol} - ${name}</li>`;
+                // console.log("added to searchResults");
                 const listItem = `<option><p>${symbol} - ${name}</p></option>`;
                 const $listItem = $(listItem);
                 
@@ -384,7 +400,7 @@ $(document).ready(function() {
         }
         delay = setTimeout(() => fetchSearchResults(keyword), 300);
     }
-    searchInput.keyup(search)
+    searchInput.keyup(search);
     searchInput.focusin(search);
     document.addEventListener("click", () => searchResults.empty());
 
@@ -403,71 +419,80 @@ $(document).ready(function() {
     });
 
     $("#confirm-order-button").click(function() {
-        let stockSymbol = selectedStockSymbol;
-        let stockName = selectedStockName;
-        let timeFrame = $("#Time-Frame").val();
-        let size = $("#trade-options-size").val();
-        let price = $("#trade-options-price").val();
-        let stopLoss = $("#trade-options-stoploss").val();
-        let takeProfit = $("#trade-options-takeprofit").val();
-        let type = $("#stock-type").val();
 
         function resetInputs() {
             $("#searchInput").val('');
             $("#Time-Frame").val('');
             $("#trade-options-size").val('');
-            $("#trade-options-price").val('');
-            $("#trade-options-stoploss").val('');
-            $("#trade-options-takeprofit").val('');
+            // $("#trade-options-price").val('');
+            // $("#trade-options-stoploss").val('');
+            // $("#trade-options-takeprofit").val('');
             $("#stock-type").val('');
         }
 
-        const invalid = (!stockSymbol) || (!stockName) || (!size) || (!price) || (!stopLoss) || (!takeProfit);
+        let stockSymbol = selectedStockSymbol;
+        let stockName = selectedStockName;
+        let timeFrame = $("#Time-Frame").val();
+        let size = $("#trade-options-size").val();
+        let type = $("#stock-type").val();
+
+        // const invalid = (!stockSymbol) || (!stockName) || (!timeFrame) || (!size) || (!type);
+        const invalid = (!timeFrame) || (!size) || (!type);
 
         if (invalid) {
             alert("Please fill up all the fields!");
             return;
         }
+
+        var url = 'https://www.alphavantage.co/query?function=' + timeFrame  + '&symbol=' + stockSymbol + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
+
+        if (timeFrame == 'TIME_SERIES_INTRADAY') {
+            url = 'https://www.alphavantage.co/query?function=' + timeFrame + '&symbol=' + stockSymbol + '&interval=15min' + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
+        }
+
         
-        // timeFrame = hashTimeFrame(timeFrame);
+        anychart.onDocumentReady(function() {
+            anychart.data.loadCsvFile(url, (data) => {
+                const price = Number(getCurrentPrice(data.slice(38)));
+                // const price = 100;
 
-        // Placing the order
-        (async () => {
-            const portfolioDocRef = doc(db, userEmail, "Portfolio");
-            const docSnap = await getDoc(portfolioDocRef);
-            const docData = docSnap.data();
-            const balance = docData.balance;
+                // Placing the order
+                (async () => {
+                    const portfolioDocRef = doc(db, userEmail, "Portfolio");
+                    const docSnap = await getDoc(portfolioDocRef);
+                    const docData = docSnap.data();
+                    const balance = docData.balance;
 
-            if (balance - size * price < 0) {
-                alert("Insufficient funds. This order has exceeded the current balance");
-                return;
-            }
+                    if (balance - size * price < 0) {
+                        alert("Insufficient funds. This order has exceeded the current balance");
+                        return;
+                    }
 
-            await (async () => updateBalance(balance - size * price))();
-            prevNumOfStocks = numOfStocks;
+                    await (async () => updateBalance(balance - size * price))();
+                    prevNumOfStocks = numOfStocks;
 
-            await updateDoc(portfolioDocRef, {
-                "numOfStocks": ++numOfStocks
+                    await updateDoc(portfolioDocRef, {
+                        "numOfStocks": ++numOfStocks
+                    });
+
+                    await addDoc(collection(db, userEmail, "Portfolio", "Stocks"), {
+                        "stockSymbol": stockSymbol,
+                        "stockName": stockName,
+                        "timeFrame": timeFrame,
+                        "timeFrameDisplay": hashTimeFrame(timeFrame),
+                        "size": size,
+                        "price": price,
+                        "type": type 
+                    });
+
+                    alert("Order is Placed!");
+                    console.log("Order is Placed!");
+
+                    // RESET ALL INPUTS
+                    resetInputs();
+                })();
             });
-
-            await addDoc(collection(db, userEmail, "Portfolio", "Stocks"), {
-                "stockSymbol": stockSymbol,
-                "stockName": stockName,
-                "timeFrame": timeFrame,
-                "timeFrameDisplay": hashTimeFrame(timeFrame),
-                "size": size,
-                "price": price,
-                "stopLoss": stopLoss,
-                "takeProfit": takeProfit,
-                "type": type 
-            });
-
-            alert("Order is Placed!");
-            console.log("Order is Placed!");
-
-            // RESET ALL INPUTS
-            resetInputs();
-        })();
+        });
 
     });
     
