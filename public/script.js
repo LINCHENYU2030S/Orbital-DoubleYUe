@@ -156,7 +156,9 @@ async function initializePortfolioTable() {
                         cells[4].innerHTML = docData.size;
                         cells[5].innerHTML = Number(docData.price).toFixed(4);
                         cells[6].innerHTML = currentPrice.toFixed(4);
-                        const profitLoss = (currentPrice - docData.price).toFixed(4);
+                        const profitLoss = (docData.type == "Long") 
+                            ? (currentPrice - docData.price).toFixed(4)
+                            : (docData.price - currentPrice).toFixed(4);
                         cells[7].innerHTML = profitLoss;
                         if (profitLoss > 0) {
                             cells[7].style.color = '#008000';
