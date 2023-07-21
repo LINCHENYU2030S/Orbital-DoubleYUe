@@ -1,5 +1,5 @@
 // IMPORTS
-  
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { 
     getAuth, 
@@ -128,12 +128,12 @@ async function initializePortfolioTable() {
         let rowNumber = 0;
         snapshot.docs.forEach((doc) => {
             if (doc.id != "?") {
-                rowNumber++;
                 const docData = doc.data();
                 const row = portfolioStockTable.insertRow(-1);
                 for (let j = 0; j < currStockTableColNumber; j++) {
                     row.insertCell();
                 }
+                row.cells[0].innerHTML = ++rowNumber;
 
                 var url = 'https://www.alphavantage.co/query?function=' + docData.timeFrame  + '&symbol=' + docData.stockSymbol + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
 
@@ -145,9 +145,8 @@ async function initializePortfolioTable() {
                 anychart.onDocumentReady(function() {
                     anychart.data.loadCsvFile(url, (data) => {
                         const currentPrice = Number(getCurrentPrice(data.slice(38)));
-
                         const cells = row.cells;
-                        cells[0].innerHTML = rowNumber;
+                        // cells[0].innerHTML = ++rowNumber;
                         cells[1].innerHTML = docData.stockSymbol + " - " + docData.stockName;
                         cells[2].innerHTML = docData.type;
                         cells[3].innerHTML = docData.timeFrameDisplay;
@@ -404,30 +403,11 @@ $(document).ready(function() {
     });
 
     $("#confirm-order-button").click(function() {
-        const selectedStock = $("#searchInput").val();
         let stockSymbol = selectedStockSymbol;
         let stockName = selectedStockName;
         let timeFrame = $("#Time-Frame").val();
         let size = $("#trade-options-size").val();
-
-        const express = require('express');
-        const app = express();
-
-        // Sets the Access-Control-Allow-Origin header to *, which allows any website
-        // to access our server's resources.
-        app.use(function(req, res, next) {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            next();
-        });
-        
-        let price;
-        fetch('https://query1.finance.yahoo.com/v8/finance/chart/AAPL', {
-            method: 'GET'
-        })
-        .then(response => response.json())
-        .then(data => price = data.chart.result[0].meta.regularMarketPrice)
-        .catch(error => console.error(error));
+        let price = $("#trade-options-price").val();
         let stopLoss = $("#trade-options-stoploss").val();
         let takeProfit = $("#trade-options-takeprofit").val();
         let type = $("#stock-type").val();
@@ -436,12 +416,13 @@ $(document).ready(function() {
             $("#searchInput").val('');
             $("#Time-Frame").val('');
             $("#trade-options-size").val('');
+            $("#trade-options-price").val('');
             $("#trade-options-stoploss").val('');
             $("#trade-options-takeprofit").val('');
             $("#stock-type").val('');
         }
 
-        const invalid = (!stockSymbol) || (!stockName) || (!size) || (!stopLoss) || (!takeProfit);
+        const invalid = (!stockSymbol) || (!stockName) || (!size) || (!price) || (!stopLoss) || (!takeProfit);
 
         if (invalid) {
             alert("Please fill up all the fields!");
