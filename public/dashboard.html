@@ -50,6 +50,10 @@
                     <option value="TIME_SERIES_MONTHLY">Month</option>
                 </select>
             </div>
+            <label for="mean-reversionperiod">SMA Period for mean-reversion: </label>
+            <input type="text" id="mean-reversionperiod" pattern="^\d+(\.\d+)?$" placeholder="SMA period for mean-reversion" required>
+            <label for="mean-reversionzthreshold">zScoreThreshold for mean-reversion: </label>
+            <input type="text" id="mean-reversionzthreshold" pattern="^\d+(\.\d+)?$" placeholder="zthreshold for mean-reversion" required>
             <button id="mean-reversion">Backtest with mean-reversion</button>
             <div id="simulation-result">
 
@@ -465,7 +469,9 @@
     <script src="script.js" type="module"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script language="javascript" type="text/javascript" src="node_modules/data-forge/dist/web/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
 </body>
 </html>
