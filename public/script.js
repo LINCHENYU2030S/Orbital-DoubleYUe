@@ -9,7 +9,7 @@ import {
     onAuthStateChanged,
     deleteUser
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { 
+import {
     getFirestore,
     doc,
     setDoc,
@@ -612,3 +612,105 @@ if (backBtn) {
 // window.addEventListener('beforeunload', () => {
 //     sessionStorage.clear();
 // });
+
+/* Backtesting */
+
+
+$("#mean-reversion").click(function() {
+    const selectedstock = $("#search-input").val();
+    const selectedtimeframe = $("#time-frame").val();
+    const period = 30; // 30-day period for the SMA
+    const zScoreThreshold = 1.5; // Adjust the threshold as per your preference
+    const initialAmount = 10000; // Initial amount in dollars
+    
+    var url = 'https://www.alphavantage.co/query?function=' + selectedtimeframe  + '&symbol=' + selectedstock + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
+    let inputSeries = dataForge.readFileSync(url)
+            .parseCSV()
+            .parseDates("date", "D/MM/YYYY")
+            .parseFloats(["open", "high", "low", "close", "volume"])
+            // Index so we can soon merge on date
+            .setIndex("date")
+            // Rename "date" to "time" for Grademark.
+            .renameSeries({ date: "time" });
+    
+    // Calculate Simple Moving Average(SMA)
+    function sma(series, period) {
+        const smaValues = [];
+        for (let i = 0; i < series.length - period + 1; i++) {
+          const sum = series.slice(i, i + period).reduce((acc, value) => acc + value, 0);
+          const sma = sum / period;
+          smaValues.push(sma);
+        }
+        return smaValues;
+      }
+    
+    const movingAverage = sma(inputSeries
+            .deflate(bar => bar.close).toArray() // Extract closing price series
+            , 30) // 30 day moving average
+        
+    // Integrate moving average indexed on date.
+    inputSeries = inputSeries.withSeries("sma", movingAverage)
+        .skip(30);// Skip blank sma entries.
+
+    // Calculate Mean and Standard Deviation of closing prices
+    function calculateMeanAndStdDev(series) {
+        const mean = series.reduce((acc, value) => acc + value, 0) / series.length;
+        const squaredDeviations = series.map(value => Math.pow(value - mean, 2));
+        const variance = squaredDeviations.reduce((acc, value) => acc + value, 0) / series.length;
+        const stdDev = Math.sqrt(variance);
+        
+        return {mean, stdDev};
+    }
+
+    // Apply Mean-Reversion Strategy and simulate with initial amount $10000
+    function meanReversionStrategySimulation(inputSeries, period, zScoreThreshold, initialAmount) {
+        const closingPrices = inputSeries.deflate(bar => bar.close).toArray();
+        const smaValues = sma(closingPrices, period);
+        const { mean, stdDev} = calculateMeanAndStdDev(closingPrices);
+
+        const zScores = closingPrices.map((price, index) => (price - smaValues[index]) / stdDev);
+
+        let currentBalance = initialAmount;
+        let currentStocks = 0;
+        const signals = [];
+        for (let i = 0; i < zScores.length; i++) {
+            if (zScores[i] > zScoreThreshold) {
+                // Sell signal, sell all stocks
+                currentBalance += currentStocks * closingPrices[i];
+                currentStocks = 0;
+                signals.push("SELL");
+            } else if (zScores[i] < zScoreThreshold) {
+                // Buy signal, buy with available balance
+                currentStocks += Math.floor(currentBalance / closingPrices[i]);
+                currentBalance -= Math.floor(currentBalance / closingPrices[i]) * closingPrices[i];
+                signals.push("BUY");
+            } else {
+                // Hold signal, do nothing
+                signals.push("HOLD");
+            }
+        }
+
+        // Calculate the final amount and profit
+        const finalAmount = currentBalance + currentStocks * closingPrices[closingPrices.length - 1];
+        const profitPercentage = ((finalAmount - initialAmount) / initialAmount) * 100;
+
+        return { signals, finalAmount, profitPercentage };
+    }
+
+    const simulationResult = meanReversionStrategySimulation(inputSeries, period, zScoreThreshold, initialAmount);
+    const finalamount = simulationResult.finalAmount;
+    const profitpercentage = simulationResult.profitPercentage;
+
+    console.log("Final Amount: $" + finalamount.toFixed(2));
+    console.log("Profit Percentage: " + profitpercentage.toFixed(2) + "%");
+
+    // Update the simulation result to the user
+    const resultDiv = document.getElementById('simulation-result');
+    resultDiv.innerHTML = `
+        <p>Initial Amount: $${initialAmount.toFixed(2)}</p>
+        <p>Final Amount: $${currentAmount.toFixed(2)}</p>
+        <p>Profit/Loss Percentage: ${profitPercentage.toFixed(2)}%</p>
+    `;
+
+
+});

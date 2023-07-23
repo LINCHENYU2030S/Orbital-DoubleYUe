@@ -27,7 +27,7 @@
     <div class="sidebar">
         <nav class="sidebar-buttons">
         <ul class="tabs">
-            <li id="sidebar-button-dashboard" data-tab-target="#dashboard" class="active tab">Dashboard</li>
+            <li id="sidebar-button-dashboard" data-tab-target="#dashboard" class="active tab">Backtesting</li>
             <li id="sidebar-button-portfolio" data-tab-target="#portfolio" class="unactive tab">Portfolio</li>
             <li id="sidebar-button-trade" data-tab-target="#trade" class="unactive tab">Trade</li>
             <li id="sidebar-button-settings" data-tab-target="#settings" class="unactive tab">Settings</li>
@@ -38,7 +38,22 @@
 
     <div class="tab-content">
         <div id="dashboard" data-tab-content class="active">
-            This is the dashboard section
+            <label for="search-input">Stock: </label>
+                <input option-box type="text" id="search-input" placeholder="Search for a stock" autocomplete="off" required>
+            <div>
+                <label for="time-frame">Time Frame: </label>
+                <select option-box id="time-frame" placeholder="Select a Time Frame" required>
+                    <option value="" disabled selected hidden>Select a time frame</option>
+                    <option value="TIME_SERIES_INTRADAY">15 min</option>
+                    <option value="TIME_SERIES_DAILY_ADJUSTED">Day</option>
+                    <option value="TIME_SERIES_WEEKLY">Week</option>
+                    <option value="TIME_SERIES_MONTHLY">Month</option>
+                </select>
+            </div>
+            <button id="mean-reversion">Backtest with mean-reversion</button>
+            <div id="simulation-result">
+
+            </div>
         </div>
 
         <!-- This is the portfolio section -->
@@ -211,6 +226,7 @@
                 <div class="title">Place Order</div>
                 <div class="options-container">
                     <div trading-attr class="stock-option">
+                        
                         <label for="searchInput">Stock: </label>
                         <input option-box type="text" id="searchInput" placeholder="Search for a stock" autocomplete="off" required>
                         <ul id="searchResults"></ul>
@@ -449,6 +465,7 @@
     <script src="script.js" type="module"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script language="javascript" type="text/javascript" src="node_modules/data-forge/dist/web/index.js"></script>
 
 </body>
 </html>
