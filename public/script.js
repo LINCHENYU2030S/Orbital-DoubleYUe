@@ -38,6 +38,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const alphaVantageAPIKey = "D5AVFFFTC6HG8HKJ.";
 
 // TAB NAVIGATION
 let i = 1;
@@ -54,7 +55,8 @@ const topUpWithdrawInput = document.getElementById('top-up-withdraw-input');
 const balanceElement = document.getElementById('balance');
 const topUpBtn = document.querySelector('.top-up-btn');
 const withdrawBtn = document.querySelector('.withdraw-btn');
-let currStockTableColNumber = 8;
+let currStockTableColNumber = 9;
+let currentPrices = {};
 
 // TRADE
 
@@ -70,6 +72,14 @@ const nextBtn = document.getElementById('guide-next-button');
 const backBtn = document.getElementById('guide-back-button');
 
 
+function getAlphaVantageURL(timeFrame, stockSymbol) {
+    let url = `https://www.alphavantage.co/query?function=${timeFrame}&symbol=${stockSymbol}&apikey=${alphaVantageAPIKey}&datatype=csv`;
+
+    if (timeFrame == 'TIME_SERIES_INTRADAY') {
+        url = `https://www.alphavantage.co/query?function=${timeFrame}&symbol=${stockSymbol}&interval=15min&apikey=${alphaVantageAPIKey}&datatype=csv`;
+    }
+    return url;
+}
 
 function getCurrentPrice(data) {
     const intendedComma = 4;
@@ -94,6 +104,10 @@ function getCurrentPrice(data) {
     return currentPrice;
 }
 
+function getStockDocRef(docId) {
+    return doc(db, userEmail, "Portfolio", "Stocks", docId);
+}
+
 async function initializeAndUpdateUser() {
     // Get User Current Portfolio Balance
     const portfolioDocRef = doc(db, userEmail, "Portfolio");
@@ -108,6 +122,7 @@ async function initializeAndUpdateUser() {
 async function initializePortfolioTable() {
     const portfolioStockTable = document.querySelector('#portfolio-stock-table tbody');
     console.log("user current owned number of stocks is " + numOfStocks);
+    const portfolioDocRef = doc(db, userEmail, "Portfolio");
     const stockColRef = collection(db, userEmail, "Portfolio", "Stocks");
 
     for (let i = 1; i <= numOfStocks; i++) {
@@ -116,10 +131,13 @@ async function initializePortfolioTable() {
 
     // Initialize Realtime Listener Object to Update Table whenever there is a change to the database
     onSnapshot(stockColRef, (snapshot) => {
+
         // Delete current table
         for (let i = 1; i <= prevNumOfStocks; i++) {
             portfolioStockTable.deleteRow(1);
+            console.log("rows deleted");
         }
+
         // Display "No Stock Holdings" if user has no stock holdings
         if (numOfStocks !== 0) {
             document.getElementById("no-stock-holdings-description").classList.remove("active");
@@ -130,25 +148,68 @@ async function initializePortfolioTable() {
         }
 
         let rowNumber = 0;
-        snapshot.docs.forEach((doc) => {
+        snapshot.docs.forEach(async (doc) => { // ** change back (delete async)
             if (doc.id != "?") {
+                // stockIdArray[++rowNumber] = doc.id;
+                // console.log(doc.id);
+
                 const docData = doc.data();
                 const row = portfolioStockTable.insertRow(-1);
                 for (let j = 0; j < currStockTableColNumber; j++) {
                     row.insertCell();
                 }
                 row.cells[0].innerHTML = ++rowNumber;
+                console.log("inserted row " + rowNumber);
+                
 
-                var url = 'https://www.alphavantage.co/query?function=' + docData.timeFrame  + '&symbol=' + docData.stockSymbol + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
+                let url = getAlphaVantageURL(docData.timeFrame, docData.stockSymbol);
 
-                if (docData.timeFrame == 'TIME_SERIES_INTRADAY') {
-                    url = 'https://www.alphavantage.co/query?function=' + docData.timeFrame + '&symbol=' + docData.stockSymbol + '&interval=15min' + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
-                }
+                // Sell Buttons
+                row.cells[8].innerHTML = `<div class="portfolio-table-sellbutton" id="${doc.id}">sell</div>`;
+                const btn = document.getElementById(doc.id);
+                btn.addEventListener('click', async () => {
+                    console.log(btn.id);
 
+                    const docRef = getStockDocRef(btn.id);
+                    const docSnap = await getDoc(docRef);
+                    const docData = docSnap.data();
+
+                    // Popup sell window
+                    let sellSize = Number(prompt("Enter your selling size", ""));
+                    console.log(sellSize);
+                    if (isNaN(sellSize) || sellSize <= 0 || !Number.isInteger(sellSize)) {
+                        alert("Please Enter a Valid Positive Integer!");
+                        return;
+                    } 
+                    
+                    if (sellSize > docData.size) {
+                        alert("Sell size has exceeded current owned stock size!");
+                        return;
+                    } 
+                    
+                    updateBalance(balance + sellSize * currPrice);
+
+                    if (sellSize < docData.size) {
+                        const newSize = docData.size - sellSize;
+                        await updateDoc(docRef, {
+                            "size": newSize
+                        });
+                    } else if (sellSize == docData.size) {
+                        prevNumOfStocks = numOfStocks--;
+                        await updateDoc(portfolioDocRef, {
+                            "numOfStocks": numOfStocks
+                        });
+                        await deleteDoc(docRef);
+                    }
+                });
                 
                 anychart.onDocumentReady(function() {
-                    anychart.data.loadCsvFile(url, (data) => {
+                    anychart.data.loadCsvFile(url, async (data) => {
+                   
                         const currentPrice = Number(getCurrentPrice(data.slice(38)));
+                        const docRef = getStockDocRef(doc.id);
+                        currentPrices[doc.id] = currentPrice;
+                
                         const cells = row.cells;
                         cells[1].innerHTML = docData.stockSymbol + " - " + docData.stockName;
                         cells[2].innerHTML = docData.type;
@@ -157,8 +218,8 @@ async function initializePortfolioTable() {
                         cells[5].innerHTML = Number(docData.price).toFixed(4);
                         cells[6].innerHTML = currentPrice.toFixed(4);
                         const profitLoss = (docData.type == "Long") 
-                            ? (currentPrice - docData.price).toFixed(4)
-                            : (docData.price - currentPrice).toFixed(4);
+                            ? (docData.size * (currentPrice - docData.price)).toFixed(4)
+                            : (docData.size * (docData.price - currentPrice)).toFixed(4);
                         cells[7].innerHTML = profitLoss;
                         if (profitLoss > 0) {
                             cells[7].style.color = '#008000';
@@ -170,7 +231,6 @@ async function initializePortfolioTable() {
                         console.log("filled row inserted");
                     });
                 });
-                
             }
         });
     });
@@ -231,12 +291,15 @@ function checkAuth() {
 // if not logged in, nav to login page
 checkAuth();
 
+
 // portfolioPart
 let totalTopUp = 0;
 let totalWithdraw = 0;
 
 topUpBtn.addEventListener('click', handleTopUp);
 withdrawBtn.addEventListener('click', handleWithdraw);
+console.log(1);
+
 
 function updateBalance(newBalance) {
     balance = newBalance;
@@ -333,7 +396,6 @@ if (tabs) {
 
 // Trade Part
 $(document).ready(function() {
-    const apiKey = "C3XZTDGXRR6K8AZS";
     const searchInput = $("#searchInput");
     const searchResults = $("#searchResults");
     let selectedStockSymbol = "";
@@ -342,7 +404,8 @@ $(document).ready(function() {
     // Function to fetch search results from Alpha Vantage API
     function fetchSearchResults(keyword) {
         console.log("searching...");
-        const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${keyword}&apikey=${apiKey}`;
+        console.log(alphaVantageAPIKey);
+        const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${keyword}&apikey=${alphaVantageAPIKey}`;
         
         // Make the API request
         $.get(url, function(data) {
@@ -444,12 +507,7 @@ $(document).ready(function() {
             return;
         }
 
-        var url = 'https://www.alphavantage.co/query?function=' + timeFrame  + '&symbol=' + stockSymbol + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
-
-        if (timeFrame == 'TIME_SERIES_INTRADAY') {
-            url = 'https://www.alphavantage.co/query?function=' + timeFrame + '&symbol=' + stockSymbol + '&interval=15min' + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
-        }
-
+        let url = getAlphaVantageURL(timeFrame, stockSymbol);
         
         anychart.onDocumentReady(function() {
             anychart.data.loadCsvFile(url, (data) => {
@@ -469,21 +527,67 @@ $(document).ready(function() {
                     }
 
                     await (async () => updateBalance(balance - size * price))();
+
                     prevNumOfStocks = numOfStocks;
 
                     await updateDoc(portfolioDocRef, {
                         "numOfStocks": ++numOfStocks
                     });
 
-                    await addDoc(collection(db, userEmail, "Portfolio", "Stocks"), {
+                    const stockDocRef = await addDoc(collection(db, userEmail, "Portfolio", "Stocks"), {
                         "stockSymbol": stockSymbol,
                         "stockName": stockName,
+                        "type": type,
                         "timeFrame": timeFrame,
                         "timeFrameDisplay": hashTimeFrame(timeFrame),
                         "size": size,
                         "price": price,
-                        "type": type 
                     });
+
+                    const newSellBtn = document.createElement("div");
+                    newSellBtn.innerText = "sell";
+                    newSellBtn.classList.add("portfolio-table-sellbutton");
+                    newSellBtn.id = stockDocRef;
+
+                    newSellBtn.addEventListener('click', async () => {
+                        console.log(newSellBtn.id);
+            
+                        const docRef = getStockDocRef(newSellBtn.id);
+                        const docSnap = await getDoc(docRef);
+                        const docData = docSnap.data();
+            
+                        // Popup sell window
+                        let sellSize = Number(prompt("Enter your selling size", ""));
+                        console.log(sellSize);
+                        if (isNaN(sellSize) || sellSize <= 0 || !Number.isInteger(sellSize)) {
+                            alert("Please Enter a Valid Positive Integer!");
+                            return;
+                        } 
+                        
+                        if (sellSize > docData.size) {
+                            alert("Sell size has exceeded current owned stock size!");
+                            return;
+                        } 
+
+                        let currPrice = currentPrices[newSellBtn.id];
+                        
+                        updateBalance(balance + sellSize * currPrice);
+            
+                        if (sellSize < docData.size) {
+                            const newSize = docData.size - sellSize;
+                            await updateDoc(docRef, {
+                                "size": newSize
+                            });
+                        } else if (sellSize == docData.size) {
+                            prevNumOfStocks = numOfStocks;
+                            await updateDoc(portfolioDocRef, {
+                                "numOfStocks": --numOfStocks
+                            });
+                            await deleteDoc(docRef);
+                        }
+            
+                    });
+
 
                     alert("Order is Placed!");
                     console.log("Order is Placed!");
@@ -625,11 +729,7 @@ $("#mean-reversion").click(function() {
     const initialAmount = 10000; // Initial amount in dollars
 
     // Fetch data from AlphaVantage API
-    var apiUrl = 'https://www.alphavantage.co/query?function=' + selectedTimeframe  + '&symbol=' + selectedStock + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
-
-    if (selectedTimeframe == 'TIME_SERIES_INTRADAY') {
-        apiUrl = 'https://www.alphavantage.co/query?function=' + selectedTimeframe + '&symbol=' + selectedStock + '&interval=15min' + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
-    }
+    var apiUrl = getAlphaVantageURL(selectedTimeframe, selectedStock);
     axios.get(apiUrl)
       .then(response => {
         console.log("Response Data:", response.data);

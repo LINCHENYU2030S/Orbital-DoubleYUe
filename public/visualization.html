@@ -23,6 +23,17 @@
         <div id="container"></div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
+            const alphaVantageAPIKey = "D5AVFFFTC6HG8HKJ.";
+
+            function getAlphaVantageURL(timeFrame, stockSymbol) {
+                let url = `https://www.alphavantage.co/query?function=${timeFrame}&symbol=${stockSymbol}&apikey=${alphaVantageAPIKey}&datatype=csv`;
+
+                if (timeFrame == 'TIME_SERIES_INTRADAY') {
+                    url = `https://www.alphavantage.co/query?function=${timeFrame}&symbol=${stockSymbol}&interval=15min&apikey=${alphaVantageAPIKey}&datatype=csv`;
+                }
+                return url;
+            }
+
             const date = new Date();
 
             let day = date.getDate();
@@ -37,11 +48,8 @@
             const selectedTimeFrame = localStorage.getItem("selectedTimeFrame");
             console.log(selectedStock);
             console.log(selectedTimeFrame);
-            var url = 'https://www.alphavantage.co/query?function=' + selectedTimeFrame + '&symbol=' + selectedStock + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
 
-            if (selectedTimeFrame == 'TIME_SERIES_INTRADAY') {
-                url = 'https://www.alphavantage.co/query?function=' + selectedTimeFrame + '&symbol=' + selectedStock + '&interval=15min' + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
-            }
+            let url = getAlphaVantageURL(selectedTimeFrame, selectedStock);
 
             function getCurrentPrice(data) {
                 const intendedComma = 4;
