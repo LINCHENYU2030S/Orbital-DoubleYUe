@@ -192,6 +192,7 @@ async function initializePortfolioTable() {
 
                     if (sellSize < docData.size) {
                         const newSize = docData.size - sellSize;
+                        prevNumOfStocks = numOfStocks;
                         await updateDoc(docRef, {
                             "size": newSize
                         });
