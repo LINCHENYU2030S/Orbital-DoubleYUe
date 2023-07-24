@@ -727,8 +727,8 @@ $("#mean-reversion").click(function() {
     const zScoreThreshold = 1.5; // Adjust the threshold as per your preference
     const initialAmount = 10000; // Initial amount in dollars
     
-    let url = getAlphaVantageURL(selectedtimeframe, selectedstock);
-    
+    // let url = getAlphaVantageURL(selectedtimeframe, selectedstock);
+    var url = 'https://www.alphavantage.co/query?function=' + selectedtimeframe  + '&symbol=' + selectedstock + '&apikey=C3XZTDGXRR6K8AZS&datatype=csv';
     let inputSeries = dataForge.readFileSync(url)
             .parseCSV()
             .parseDates("date", "D/MM/YYYY")
