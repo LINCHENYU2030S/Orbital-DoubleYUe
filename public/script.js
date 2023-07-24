@@ -187,6 +187,7 @@ async function initializePortfolioTable() {
                         return;
                     } 
                     
+                    let currPrice = currentPrices[btn.id];
                     updateBalance(balance + sellSize * currPrice);
 
                     if (sellSize < docData.size) {
