@@ -55,6 +55,7 @@ const topUpWithdrawInput = document.getElementById('top-up-withdraw-input');
 const balanceElement = document.getElementById('balance');
 const topUpBtn = document.querySelector('.top-up-btn');
 const withdrawBtn = document.querySelector('.withdraw-btn');
+const totalProfitLossElement = document.getElementById('total-profit-loss');
 let currStockTableColNumber = 9;
 let currentPrices = {};
 
@@ -117,6 +118,7 @@ async function initializeAndUpdateUser() {
     numOfStocks = docData.numOfStocks;
     prevNumOfStocks = numOfStocks;
     balanceElement.innerHTML = "Balance: $" + balance;
+    totalProfitLossElement.innerHTML = "$" + docData.totalProfitLoss; 
     console.log("user current balance is " + balance);
 }
 async function initializePortfolioTable() {
@@ -148,6 +150,7 @@ async function initializePortfolioTable() {
         }
 
         let rowNumber = 0;
+        let totalProfitLoss = 0;
         snapshot.docs.forEach(async (doc) => { // ** change back (delete async)
             if (doc.id != "?") {
                 // stockIdArray[++rowNumber] = doc.id;
@@ -223,6 +226,7 @@ async function initializePortfolioTable() {
                             ? (docData.size * (currentPrice - docData.price)).toFixed(4)
                             : (docData.size * (docData.price - currentPrice)).toFixed(4);
                         cells[7].innerHTML = profitLoss;
+                        totalProfitLoss += profitLoss;
                         if (profitLoss > 0) {
                             cells[7].style.color = '#008000';
                         } else if (profitLoss < 0) {
@@ -235,6 +239,13 @@ async function initializePortfolioTable() {
                 });
             }
         });
+
+        (async () => {
+            await updateDoc(doc(db, userEmail, "Portfolio"), {
+                "totalProfitLoss": totalProfitLoss
+            })
+        })();
+
     });
 }
 async function login(email, password) {
