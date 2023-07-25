@@ -951,7 +951,7 @@ $("#mean-reversion").click(function() {
 
 });
 
-// window.addEventListener('beforeunload', () => {
-//     sessionStorage.clear();
-//     localStorage.clear();
-// });
+window.addEventListener('beforeunload', () => {
+    sessionStorage.clear();
+    localStorage.clear();
+});
