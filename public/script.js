@@ -160,6 +160,11 @@ async function initializePortfolioTable() {
 
                         console.log("This stock's current price is " + currPrice);
 
+                        if (isNaN(currPrice)) {
+                            alert("Due to free API issues, please try again in a minute");
+                            return;
+                        }
+
                         localStorage.setItem(doc.id, currPrice);
 
 
@@ -606,6 +611,11 @@ $(document).ready(function() {
                 }).data[0].close;
 
                 console.log("This stock's current price is " + currPrice);
+
+                if (isNaN(currPrice)) {
+                    alert("Due to free API issues, please try again in a minute");
+                    return;
+                }
 
                 localStorage.setItem(doc.id, currPrice);
 
