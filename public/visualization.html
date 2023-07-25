@@ -10,6 +10,7 @@
         <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-data-adapter.min.js"></script>
         <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-ui.min.js"></script>
         <script src="https://cdn.anychart.com/releases/8.11.0/themes/dark_glamour.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" integrity="sha512-dfX5uYVXzyU8+KHqj8bjo7UkOdg18PaOtpa48djpNbZHwExddghZ+ZmzWT06R5v6NSk3ZUfsH6FNEDepLx9hPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <style type="text/css">
             html, body, #container {
                 width: 100%;
@@ -23,7 +24,7 @@
         <div id="container"></div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-            const alphaVantageAPIKey = "D5AVFFFTC6HG8HKJ.";
+            const alphaVantageAPIKey = "D5AVFFFTC6HG8HKJ";
 
             function getAlphaVantageURL(timeFrame, stockSymbol) {
                 let url = `https://www.alphavantage.co/query?function=${timeFrame}&symbol=${stockSymbol}&apikey=${alphaVantageAPIKey}&datatype=csv`;
@@ -51,26 +52,16 @@
 
             let url = getAlphaVantageURL(selectedTimeFrame, selectedStock);
 
-            function getCurrentPrice(data) {
-                const intendedComma = 4;
-                let j = 0;
-                for (let i = 1; i <= intendedComma; i++) {
-                    while (data.charAt(j) != ',') {
-                        j++;
-                        if (j > 100) {
-                            return "Can't find current price";
-                        }
-                    }
-                    if (i != intendedComma) {
-                        j++
-                    }
-                }
-                j++;
-                let currentPrice = "";
-                while (data.charAt(j) != ',') {
-                    currentPrice += data.charAt(j++);
-                    // console.log(j);
-                }
+            function getCurrentPrice(data) { // Waiting for optimization
+    
+                console.log(data);
+
+                const currentPrice = Papa.parse(data, {
+                    header: true
+                }).data[0].close
+
+                console.log("This stock's current price is " + currentPrice);
+
                 return currentPrice;
             }
 
@@ -85,7 +76,7 @@
                         dataTable.addData(data);
 
                         // console.log((data.slice(38)));
-                        console.log("Current price is " + getCurrentPrice(data.slice(38)));
+                        console.log("Current price is " + getCurrentPrice(data));
                         // console.log(data);
                         // console.log(data.slice(40, 50));
 
