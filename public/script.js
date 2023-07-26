@@ -38,7 +38,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const alphaVantageAPIKey = "MXOJWH80MONT4OFR";
+const alphaVantageAPIKey = "D5AVFFFTC6HG8HKJ";
 
 // TAB NAVIGATION
 let i = 1;
@@ -55,8 +55,8 @@ const topUpWithdrawInput = document.getElementById('top-up-withdraw-input');
 const balanceElement = document.getElementById('balance');
 const topUpBtn = document.querySelector('.top-up-btn');
 const withdrawBtn = document.querySelector('.withdraw-btn');
+const totalProfitLossElement = document.getElementById('total-profit-loss');
 let currStockTableColNumber = 9;
-let currentPrices = {};
 
 // TRADE
 
@@ -72,6 +72,12 @@ const nextBtn = document.getElementById('guide-next-button');
 const backBtn = document.getElementById('guide-back-button');
 
 
+
+
+function getStockDocRef(docId) {
+    return doc(db, userEmail, "Portfolio", "Stocks", docId);
+}
+
 function getAlphaVantageURL(timeFrame, stockSymbol) {
     let url = `https://www.alphavantage.co/query?function=${timeFrame}&symbol=${stockSymbol}&apikey=${alphaVantageAPIKey}&datatype=csv`;
 
@@ -81,32 +87,7 @@ function getAlphaVantageURL(timeFrame, stockSymbol) {
     return url;
 }
 
-function getCurrentPrice(data) {
-    const intendedComma = 4;
-    let j = 0;
-    for (let i = 1; i <= intendedComma; i++) {
-        while (data.charAt(j) != ',') {
-            j++;
-            if (j > 100) {
-                return "Can't find current price";
-            }
-        }
-        if (i != intendedComma) {
-            j++
-        }
-    }
-    j++;
-    let currentPrice = "";
-    while (data.charAt(j) != ',') {
-        currentPrice += data.charAt(j++);
-        // console.log(j);
-    }
-    return currentPrice;
-}
 
-function getStockDocRef(docId) {
-    return doc(db, userEmail, "Portfolio", "Stocks", docId);
-}
 
 async function initializeAndUpdateUser() {
     // Get User Current Portfolio Balance
@@ -117,6 +98,7 @@ async function initializeAndUpdateUser() {
     numOfStocks = docData.numOfStocks;
     prevNumOfStocks = numOfStocks;
     balanceElement.innerHTML = "Balance: $" + balance;
+    totalProfitLossElement.innerHTML = "$" + Number(docData.totalProfitLoss); 
     console.log("user current balance is " + balance);
 }
 async function initializePortfolioTable() {
@@ -148,21 +130,146 @@ async function initializePortfolioTable() {
         }
 
         let rowNumber = 0;
-        snapshot.docs.forEach(async (doc) => { // ** change back (delete async)
-            if (doc.id != "?") {
-                // stockIdArray[++rowNumber] = doc.id;
-                // console.log(doc.id);
+        let totalProfitLoss = 0;
+        snapshot.docs.forEach((doc) => { // ** change back (delete async)
+            if (doc.id == "?") return;
 
-                const docData = doc.data();
-                const row = portfolioStockTable.insertRow(-1);
-                for (let j = 0; j < currStockTableColNumber; j++) {
-                    row.insertCell();
-                }
-                row.cells[0].innerHTML = ++rowNumber;
-                console.log("inserted row " + rowNumber);
+            const docData = doc.data();
+            const row = portfolioStockTable.insertRow(-1);
+            for (let j = 0; j < currStockTableColNumber; j++) {
+                row.insertCell();
+            }
+            row.cells[0].innerHTML = ++rowNumber;
+            console.log("inserted row " + rowNumber);
+
+            if (localStorage.getItem(doc.id) == null) {
+                anychart.onDocumentReady(async function() {
+                    const stockDocRef = getStockDocRef(doc.id);
+                    const stockDocSnap = await getDoc(stockDocRef);
+                    const stockDocData = stockDocSnap.data();
+                    const timeFrame = stockDocData.timeFrame;
+                    const stockSymbol = stockDocData.stockSymbol;
+                    const url = getAlphaVantageURL(timeFrame, stockSymbol);
+
+                    anychart.data.loadCsvFile(url, (data) => {
+                        console.log(data);
                 
+                        const currPrice = Number(Papa.parse(data, {
+                            header: true
+                        }).data[0].close);
 
-                let url = getAlphaVantageURL(docData.timeFrame, docData.stockSymbol);
+                        console.log("This stock's current price is " + currPrice);
+
+                        if (isNaN(currPrice)) {
+                            alert("Due to free API issues, please try again in a minute");
+                            return;
+                        }
+
+                        localStorage.setItem(doc.id, currPrice);
+
+
+
+
+                        const currentPrice = Number(localStorage.getItem(doc.id));
+                        console.log(currentPrice);
+                
+                        const cells = row.cells;
+                        cells[1].innerHTML = docData.stockSymbol + " - " + docData.stockName;
+                        cells[2].innerHTML = docData.type;
+                        cells[3].innerHTML = docData.timeFrameDisplay;
+                        cells[4].innerHTML = docData.size;
+                        cells[5].innerHTML = Number(docData.price).toFixed(4);
+                        cells[6].innerHTML = currentPrice.toFixed(4);
+                        let profitLoss = (docData.type == "Long") 
+                            ? (docData.size * (currentPrice - docData.price))
+                            : (docData.size * (docData.price - currentPrice));
+                        profitLoss = Number(profitLoss).toFixed(4);
+                        cells[7].innerHTML = profitLoss;
+
+                        totalProfitLoss += profitLoss;
+
+                        if (profitLoss > 0) {
+                            cells[7].style.color = '#008000';
+                        } else if (profitLoss < 0) {
+                            cells[7].style.color = '#FF0000';
+                        } else {
+                            cells[7].style.color = '#000000';
+                        }
+                        console.log("filled row inserted");
+
+                        // Sell Buttons
+                        row.cells[8].innerHTML = `<div class="portfolio-table-sellbutton" id="${doc.id}">sell</div>`;
+                        const btn = document.getElementById(doc.id);
+                        btn.addEventListener('click', async () => {
+                            console.log(btn.id);
+
+                            const docRef = getStockDocRef(btn.id);
+                            const docSnap = await getDoc(docRef);
+                            const docData = docSnap.data();
+
+                    // Popup sell window
+                    let sellSize = Number(prompt("Enter your selling size", ""));
+                    console.log(sellSize);
+                    if (isNaN(sellSize) || sellSize <= 0 || !Number.isInteger(sellSize)) {
+                        alert("Please Enter a Valid Positive Integer!");
+                        return;
+                    } 
+                    
+                    if (sellSize > docData.size) {
+                        alert("Sell size has exceeded current owned stock size!");
+                        return;
+                    } 
+                    
+                    let currPrice = currentPrices[btn.id];
+                    updateBalance(balance + sellSize * currPrice);
+
+                            if (sellSize < docData.size) {
+                                const newSize = docData.size - sellSize;
+                                prevNumOfStocks = numOfStocks;
+                                await updateDoc(docRef, {
+                                    "size": newSize
+                                });
+                            } else if (sellSize == docData.size) {
+                                prevNumOfStocks = numOfStocks--;
+                                await updateDoc(portfolioDocRef, {
+                                    "numOfStocks": numOfStocks
+                                });
+                                await deleteDoc(docRef);
+                            }
+                        });
+
+                    });
+
+                });
+
+            } else {
+
+                const currentPrice = Number(localStorage.getItem(doc.id));
+                console.log(currentPrice);
+        
+                const cells = row.cells;
+                cells[1].innerHTML = docData.stockSymbol + " - " + docData.stockName;
+                cells[2].innerHTML = docData.type;
+                cells[3].innerHTML = docData.timeFrameDisplay;
+                cells[4].innerHTML = docData.size;
+                cells[5].innerHTML = Number(docData.price).toFixed(4);
+                cells[6].innerHTML = currentPrice.toFixed(4);
+                let profitLoss = (docData.type == "Long") 
+                    ? (docData.size * (currentPrice - docData.price)).toFixed(4)
+                    : (docData.size * (docData.price - currentPrice)).toFixed(4);
+                cells[7].innerHTML = profitLoss;
+
+                profitLoss = Number(profitLoss);
+
+                totalProfitLoss += profitLoss;
+                if (profitLoss > 0) {
+                    cells[7].style.color = '#008000';
+                } else if (profitLoss < 0) {
+                    cells[7].style.color = '#FF0000';
+                } else {
+                    cells[7].style.color = '#000000';
+                }
+                console.log("filled row inserted");
 
                 // Sell Buttons
                 row.cells[8].innerHTML = `<div class="portfolio-table-sellbutton" id="${doc.id}">sell</div>`;
@@ -181,17 +288,16 @@ async function initializePortfolioTable() {
                         alert("Please Enter a Valid Positive Integer!");
                         return;
                     } 
-                    
                     if (sellSize > docData.size) {
                         alert("Sell size has exceeded current owned stock size!");
                         return;
                     } 
-
-                    
+                    let currPrice = localStorage.getItem(btn.id);
                     updateBalance(balance + sellSize * currPrice);
 
                     if (sellSize < docData.size) {
                         const newSize = docData.size - sellSize;
+                        prevNumOfStocks = numOfStocks;
                         await updateDoc(docRef, {
                             "size": newSize
                         });
@@ -203,37 +309,17 @@ async function initializePortfolioTable() {
                         await deleteDoc(docRef);
                     }
                 });
-                
-                anychart.onDocumentReady(function() {
-                    anychart.data.loadCsvFile(url, async (data) => {
-                   
-                        const currentPrice = Number(getCurrentPrice(data.slice(38)));
-                        const docRef = getStockDocRef(doc.id);
-                        currentPrices[doc.id] = currentPrice;
-                
-                        const cells = row.cells;
-                        cells[1].innerHTML = docData.stockSymbol + " - " + docData.stockName;
-                        cells[2].innerHTML = docData.type;
-                        cells[3].innerHTML = docData.timeFrameDisplay;
-                        cells[4].innerHTML = docData.size;
-                        cells[5].innerHTML = Number(docData.price).toFixed(4);
-                        cells[6].innerHTML = currentPrice.toFixed(4);
-                        const profitLoss = (docData.type == "Long") 
-                            ? (docData.size * (currentPrice - docData.price)).toFixed(4)
-                            : (docData.size * (docData.price - currentPrice)).toFixed(4);
-                        cells[7].innerHTML = profitLoss;
-                        if (profitLoss > 0) {
-                            cells[7].style.color = '#008000';
-                        } else if (profitLoss < 0) {
-                            cells[7].style.color = '#FF0000';
-                        } else {
-                            cells[7].style.color = '#000000';
-                        }
-                        console.log("filled row inserted");
-                    });
-                });
+
             }
+            
         });
+
+        (async () => {
+            await updateDoc(doc(db, userEmail, "Portfolio"), {
+                "totalProfitLoss": totalProfitLoss
+            })
+        })();
+
     });
 }
 async function login(email, password) {
@@ -299,11 +385,10 @@ let totalWithdraw = 0;
 
 topUpBtn.addEventListener('click', handleTopUp);
 withdrawBtn.addEventListener('click', handleWithdraw);
-console.log(1);
 
 
 function updateBalance(newBalance) {
-    balance = newBalance;
+    balance = Number(newBalance);
     balanceElement.textContent = `Balance: $` + balance;
     document.getElementById('total-top-up').textContent = ` $` + totalTopUp;
     document.getElementById('total-withdrawal').textContent = ` $` + totalWithdraw;
@@ -474,6 +559,11 @@ $(document).ready(function() {
         const selectedStock = $("#searchInput").val();
         const selectedTimeFrame = $("#Time-Frame").val();
 
+        if (!selectedStock || !selectedTimeFrame) {
+            alert("Please select your stock and time frame");
+            return;
+        }
+
         // Store the values in localStorage
         localStorage.setItem("selectedStock", selectedStock);
         localStorage.setItem("selectedTimeFrame", selectedTimeFrame);
@@ -488,10 +578,13 @@ $(document).ready(function() {
             $("#searchInput").val('');
             $("#Time-Frame").val('');
             $("#trade-options-size").val('');
-            // $("#trade-options-price").val('');
-            // $("#trade-options-stoploss").val('');
-            // $("#trade-options-takeprofit").val('');
             $("#stock-type").val('');
+        }
+
+        if (numOfStocks >= 5) {
+            resetInputs();
+            alert("Due to restrictions, a user can only have 5 stock holdings!");
+            return;
         }
 
         let stockSymbol = selectedStockSymbol;
@@ -500,20 +593,36 @@ $(document).ready(function() {
         let size = $("#trade-options-size").val();
         let type = $("#stock-type").val();
 
-        // const invalid = (!stockSymbol) || (!stockName) || (!timeFrame) || (!size) || (!type);
-        const invalid = (!timeFrame) || (!size) || (!type);
+        const invalid = (!stockSymbol) || (!timeFrame) || (!size) || (!type);
 
         if (invalid) {
             alert("Please fill up all the fields!");
             return;
         }
 
-        let url = getAlphaVantageURL(timeFrame, stockSymbol);
-        
-        anychart.onDocumentReady(function() {
+
+
+        anychart.onDocumentReady(async function() {
+            const url = getAlphaVantageURL(timeFrame, stockSymbol);
+
             anychart.data.loadCsvFile(url, (data) => {
-                const price = Number(getCurrentPrice(data.slice(38)));
-                // const price = 100;
+                console.log(data);
+        
+                const currPrice = Papa.parse(data, {
+                    header: true
+                }).data[0].close;
+
+                console.log("This stock's current price is " + currPrice);
+
+                if (isNaN(currPrice)) {
+                    alert("Due to free API issues, please try again in a minute");
+                    return;
+                }
+
+                localStorage.setItem(doc.id, currPrice);
+
+
+                const price = Number(localStorage.getItem(doc.id));
 
                 // Placing the order
                 (async () => {
@@ -521,20 +630,20 @@ $(document).ready(function() {
                     const docSnap = await getDoc(portfolioDocRef);
                     const docData = docSnap.data();
                     const balance = docData.balance;
-
+        
                     if (balance - size * price < 0) {
                         alert("Insufficient funds. This order has exceeded the current balance");
                         return;
                     }
-
+        
                     await (async () => updateBalance(balance - size * price))();
-
+        
                     prevNumOfStocks = numOfStocks;
-
+        
                     await updateDoc(portfolioDocRef, {
                         "numOfStocks": ++numOfStocks
                     });
-
+        
                     const stockDocRef = await addDoc(collection(db, userEmail, "Portfolio", "Stocks"), {
                         "stockSymbol": stockSymbol,
                         "stockName": stockName,
@@ -544,12 +653,14 @@ $(document).ready(function() {
                         "size": size,
                         "price": price,
                     });
-
+        
+                    localStorage.setItem(stockDocRef.id, price);
+        
                     const newSellBtn = document.createElement("div");
                     newSellBtn.innerText = "sell";
                     newSellBtn.classList.add("portfolio-table-sellbutton");
-                    newSellBtn.id = stockDocRef;
-
+                    newSellBtn.id = stockDocRef.id;
+        
                     newSellBtn.addEventListener('click', async () => {
                         console.log(newSellBtn.id);
             
@@ -569,8 +680,8 @@ $(document).ready(function() {
                             alert("Sell size has exceeded current owned stock size!");
                             return;
                         } 
-
-                        let currPrice = currentPrices[newSellBtn.id];
+        
+                        let currPrice = localStorage.getItem(newSellBtn.id);
                         
                         updateBalance(balance + sellSize * currPrice);
             
@@ -588,15 +699,17 @@ $(document).ready(function() {
                         }
             
                     });
-
-
+        
+        
                     alert("Order is Placed!");
                     console.log("Order is Placed!");
-
+        
                     // RESET ALL INPUTS
                     resetInputs();
                 })();
+
             });
+
         });
 
     });
@@ -712,15 +825,7 @@ if (backBtn) {
     });
 }
 
-
-
-// window.addEventListener('beforeunload', () => {
-//     sessionStorage.clear();
-// });
-
 /* Backtesting */
-
-
 $("#mean-reversion").click(function() {
     // Parameters from users
     const selectedStock = $("#search-input").val();
@@ -846,4 +951,9 @@ $("#mean-reversion").click(function() {
       });
 
 
+});
+
+window.addEventListener('beforeunload', () => {
+    sessionStorage.clear();
+    localStorage.clear();
 });

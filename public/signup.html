@@ -228,7 +228,8 @@
                 try {
                     let docRef = await setDoc(doc(db, userEmail, "Portfolio"), {
                         balance: 10_000,
-                        numOfStocks: 0
+                        numOfStocks: 0,
+                        totalProfitLoss: 0
                     });
                     await setDoc(doc(db, userEmail, "Portfolio", "Stocks", "?"), {
 
