@@ -38,7 +38,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const alphaVantageAPIKey = "D5AVFFFTC6HG8HKJ.";
+const alphaVantageAPIKey = "MXOJWH80MONT4OFR";
 
 // TAB NAVIGATION
 let i = 1;
@@ -186,8 +186,8 @@ async function initializePortfolioTable() {
                         alert("Sell size has exceeded current owned stock size!");
                         return;
                     } 
+
                     
-                    let currPrice = currentPrices[btn.id];
                     updateBalance(balance + sellSize * currPrice);
 
                     if (sellSize < docData.size) {
