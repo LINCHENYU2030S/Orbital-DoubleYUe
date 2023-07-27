@@ -93,10 +93,6 @@ body {
 }
 
 
-/* Dashboard */
-.tab-content #dashboard .backtest-window .unactive.backtest {
-    display: none;
-}
 
 
 
@@ -557,7 +553,7 @@ body {
     border: 2px solid #00fbff;
     overflow: auto;
 } 
-.tab-content #dashboard .backtest-windoww .unactive[backtest-content] {
+.tab-content #dashboard .backtest-window .unactive[backtest-content] {
     display: none;
 }
 .tab-content #dashboard .backtest-window .active[backtest-content] {
