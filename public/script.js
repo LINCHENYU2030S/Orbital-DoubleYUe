@@ -1022,7 +1022,7 @@ if (backBtn) {
 
 
 
-// window.addEventListener('beforeunload', () => {
-//     sessionStorage.clear();
-//     localStorage.clear();
-// });
+window.addEventListener('beforeunload', () => {
+    sessionStorage.clear();
+    localStorage.clear();
+});
