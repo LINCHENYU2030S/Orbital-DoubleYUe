@@ -5,7 +5,8 @@
     "data-forge-fs": "^0.0.9",
     "firebase": "^10.1.0",
     "grademark": "^0.2.9",
-    "requirejs": "^2.3.6"
+    "requirejs": "^2.3.6",
+    "uglify-es": "^3.3.9"
   },
   "devDependencies": {
     "webpack": "^5.88.2",
