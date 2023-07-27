@@ -398,13 +398,223 @@ function checkAuth() {
 checkAuth();
 
 
+
+// Tab Navigation System
+if (tabs) {
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const target = document.querySelector(tab.dataset.tabTarget);
+            tabContents.forEach(tabContent => {
+                tabContent.classList.remove('active');
+            });
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+                tab.classList.add('unactive');
+            });
+            tab.classList.remove('unactive');
+            tab.classList.add('active');
+            target.classList.add('active');
+
+            if (tab.id == "sidebar-button-guide") {
+                // alert(i);
+                // guideWindow(1);
+                const guides = document.querySelectorAll('[guide-content]');
+                guides.forEach(guide => {
+                    guide.classList.remove('active');
+                    guide.classList.add('unactive');
+                });
+
+                i = 1;
+                const currGuide = document.getElementById('guide-' + i);
+                currGuide.classList.remove('unactive');
+                currGuide.classList.add('active');
+            }
+            if (tab.id == "sidebar-button-dashboard") {
+                const backtests = document.querySelectorAll('[backtest-content]');
+                backtests.forEach(backtest => {
+                    backtest.classList.remove('active');
+                    backtest.classList.add('unactive');
+                });
+
+                k = 1;
+                const currBacktest = document.getElementById('backtest-' + k);
+                currBacktest.classList.remove('unactive');
+                currBacktest.classList.add('active');
+            }
+        });
+    });
+}
+
+
+
+/* Backtesting */
+const nextButton = document.getElementById('backtest-next-button');
+const backButton = document.getElementById('backtest-back-button');
+
+if (nextButton) {
+    nextButton.addEventListener('click', () => {
+        const currBacktest = document.getElementById('backtest-' + k);
+        console.log(k);
+        if (k < 6) {
+            currBacktest.classList.remove('active');
+            currBacktest.classList.add('unactive');
+            k = k + 1;
+            const nextBacktest = document.getElementById('backtest-' + k);
+            nextBacktest.classList.remove('unactive');
+            nextBacktest.classList.add('active');
+        }
+    });
+}
+if (backButton) {
+    backButton.addEventListener('click', () => {
+        const currBacktest = document.getElementById('backtest-' + k);
+        console.log(k);
+        if (k > 1) {
+            currBacktest.classList.remove('active');
+            currBacktest.classList.add('unactive');
+            k = k - 1;
+            const nextBacktest = document.getElementById('backtest-' + k);
+            nextBacktest.classList.remove('unactive');
+            nextBacktest.classList.add('active');
+        }
+    });
+}
+
+$("#mean-reversion").click(function() {
+    // Parameters from users
+    const selectedStock = $("#search-input").val();
+    const selectedTimeframe = $("#time-frame").val();
+    const period = parseFloat($("#mean-reversionperiod").val()); //period for the SMA
+    const zScoreThreshold = parseFloat($("#mean-reversionzthreshold").val()); // Adjust the threshold as per your preference
+    const initialAmount = 10000; // Initial amount in dollars
+
+    // Fetch data from AlphaVantage API
+    var apiUrl = getAlphaVantageURL(selectedTimeframe, selectedStock);
+    axios.get(apiUrl)
+      .then(response => {
+        console.log("Response Data:", response.data);
+        // Parse CSV data using PapaParse
+        const parsedData = Papa.parse(response.data, {
+          header: true,
+          skipEmptyLines: true,
+        }).data;
+
+        // Parse dates using Moment.js
+        parsedData.forEach(row => {
+          row.time = moment(row.date, "D/MM/YYYY").toDate();
+          delete row.date;
+        });
+
+        // Convert the parsed data into DataFrame-like structure
+        const inputSeries = parsedData.reduce((series, row) => {
+          series.push(row);
+          return series;
+        }, []);
+
+        // Calculate Simple Moving Average(SMA)
+        function sma(series, period) {
+          const smaValues = [];
+          for (let i = 0; i < series.length - period + 1; i++) {
+            const sum = series.slice(i, i + period).reduce((acc, row) => acc + parseFloat(row.close), 0);
+
+            const sma = sum / period;
+            smaValues.push(sma);
+          }
+          return smaValues;
+        }
+
+        //const closingPrices = inputSeries.map(row => parseFloat(row.close));
+        const movingAverage = sma(inputSeries, period); // 30 day moving average
+
+        // Integrate moving average indexed on date.
+        inputSeries.forEach((row, index) => {
+            if (index > (period - 2)) {
+                row.sma = movingAverage[index - (period - 1)];
+            }
+        });
+
+        // Calculate Mean and Standard Deviation of closing prices
+        function calculateMeanAndStdDev(series) {
+          const mean = series.reduce((acc, value) => acc + value, 0) / series.length;
+          const squaredDeviations = series.map(value => Math.pow(value - mean, 2));
+          const variance = squaredDeviations.reduce((acc, value) => acc + value, 0) / series.length;
+          const stdDev = Math.sqrt(variance);
+          return { mean, stdDev };
+        }
+
+        // Apply Mean-Reversion Strategy and simulate with initial amount $10000
+        function meanReversionStrategySimulation(inputSeries, period, zScoreThreshold, initialAmount) {
+          const closingPrices = inputSeries.map(row => parseFloat(row.close));
+          const smaValues = sma(inputSeries, period);
+          const { mean, stdDev } = calculateMeanAndStdDev(closingPrices);
+
+          const zScores = closingPrices.map((price, index) => {
+            if (index > (period - 2)) {
+                return (price - smaValues[index - (period - 1)]) / stdDev
+            }
+          });
+          console.log(zScores);
+
+          let currentBalance = initialAmount;
+          let currentStocks = 0;
+          const signals = [];
+          for (let i = 0; i < zScores.length; i++) {
+            if (zScores[i] > zScoreThreshold) {
+              // Sell signal, sell all stocks
+              currentBalance += currentStocks * closingPrices[i];
+              currentStocks = 0;
+              signals.push("SELL");
+            } else if (zScores[i] < -1 * zScoreThreshold) {
+              // Buy signal, buy with available balance
+              currentStocks += Math.floor(currentBalance / closingPrices[i]);
+              currentBalance -= Math.floor(currentBalance / closingPrices[i]) * closingPrices[i];
+              signals.push("BUY");
+            } else {
+              // Hold signal, do nothing
+              signals.push("HOLD");
+            }
+          }
+
+          // Calculate the final amount and profit
+          const finalAmount = currentBalance + currentStocks * closingPrices[closingPrices.length - 1];
+          const profitPercentage = ((finalAmount - initialAmount) / initialAmount) * 100;
+
+          return { signals, finalAmount, profitPercentage };
+        }
+
+        const simulationResult = meanReversionStrategySimulation(inputSeries, period, zScoreThreshold, initialAmount);
+        const finalAmount = simulationResult.finalAmount;
+        const profitPercentage = simulationResult.profitPercentage;
+        console.log(simulationResult.signals);
+        console.log("Final Amount: $" + finalAmount.toFixed(2));
+        console.log("Profit Percentage: " + profitPercentage.toFixed(2) + "%");
+
+        // Update the simulation result to the user
+        const resultDiv = document.getElementById('simulation-result');
+        resultDiv.innerHTML = `
+            <p>Initial Amount: $${initialAmount.toFixed(2)}</p>
+            <p>Final Amount: $${finalAmount.toFixed(2)}</p>
+            <p>Profit/Loss Percentage: ${profitPercentage.toFixed(2)}%</p>
+        `;
+      })
+      .catch(error => {
+        console.error("Error fetching data from AlphaVantage:", error);
+        // Display an error message to the user
+        const resultDiv = document.getElementById('simulation-result');
+        resultDiv.innerHTML = "Error fetching data. Please try again later.";
+      });
+
+
+});
+
+
+
 // portfolioPart
 let totalTopUp = 0;
 let totalWithdraw = 0;
 
 topUpBtn.addEventListener('click', handleTopUp);
 withdrawBtn.addEventListener('click', handleWithdraw);
-
 
 function updateBalance(newBalance) {
     balance = Number(newBalance);
@@ -460,53 +670,6 @@ function hashTimeFrame(timeFrame) {
     } else {
         return "";
     }
-}
-
-
-// Tab Navigation System
-if (tabs) {
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const target = document.querySelector(tab.dataset.tabTarget);
-            tabContents.forEach(tabContent => {
-                tabContent.classList.remove('active');
-            });
-            tabs.forEach(tab => {
-                tab.classList.remove('active');
-                tab.classList.add('unactive');
-            });
-            tab.classList.remove('unactive');
-            tab.classList.add('active');
-            target.classList.add('active');
-
-            if (tab.id == "sidebar-button-guide") {
-                // alert(i);
-                // guideWindow(1);
-                const guides = document.querySelectorAll('[guide-content]');
-                guides.forEach(guide => {
-                    guide.classList.remove('active');
-                    guide.classList.add('unactive');
-                });
-
-                i = 1;
-                const currGuide = document.getElementById('guide-' + i);
-                currGuide.classList.remove('unactive');
-                currGuide.classList.add('active');
-            }
-            if (tab.id == "sidebar-button-dashboard") {
-                const backtests = document.querySelectorAll('[backtest-content]');
-                backtests.forEach(backtest => {
-                    backtest.classList.remove('active');
-                    backtest.classList.add('unactive');
-                });
-
-                k = 1;
-                const currBacktest = document.getElementById('backtest-' + k);
-                currBacktest.classList.remove('unactive');
-                currBacktest.classList.add('active');
-            }
-        });
-    });
 }
 
 
@@ -750,7 +913,6 @@ $(document).ready(function() {
 
 
 // settingsPart
-
 if (changePasswordBtn) {
     changePasswordBtn.addEventListener('click', () => {
         const changePasswordHeadings = document.getElementsByClassName('change-password-headings')[0];
@@ -828,8 +990,9 @@ if (changePasswordPageConfirmChangesButton) {
     });
 }
 
-// guidePart
 
+
+// guidePart
 if (nextBtn) {
     nextBtn.addEventListener('click', () => {
         const currGuide = document.getElementById('guide-' + i);
@@ -857,165 +1020,7 @@ if (backBtn) {
     });
 }
 
-/* Backtesting */
-const nextButton = document.getElementById('backtest-next-button');
-const backButton = document.getElementById('backtest-back-button');
 
-if (nextButton) {
-    nextButton.addEventListener('click', () => {
-        const currBacktest = document.getElementById('backtest-' + k);
-        console.log(k);
-        if (k < 6) {
-            currBacktest.classList.remove('active');
-            currBacktest.classList.add('unactive');
-            k = k + 1;
-            const nextBacktest = document.getElementById('backtest-' + k);
-            nextBacktest.classList.remove('unactive');
-            nextBacktest.classList.add('active');
-        }
-    });
-}
-if (backButton) {
-    backButton.addEventListener('click', () => {
-        const currBacktest = document.getElementById('backtest-' + k);
-        console.log(k);
-        if (k > 1) {
-            currBacktest.classList.remove('active');
-            currBacktest.classList.add('unactive');
-            k = k - 1;
-            const nextBacktest = document.getElementById('backtest-' + k);
-            nextBacktest.classList.remove('unactive');
-            nextBacktest.classList.add('active');
-        }
-    });
-}
-
-$("#mean-reversion").click(function() {
-    // Parameters from users
-    const selectedStock = $("#search-input").val();
-    const selectedTimeframe = $("#time-frame").val();
-    const period = parseFloat($("#mean-reversionperiod").val()); //period for the SMA
-    const zScoreThreshold = parseFloat($("#mean-reversionzthreshold").val()); // Adjust the threshold as per your preference
-    const initialAmount = 10000; // Initial amount in dollars
-
-    // Fetch data from AlphaVantage API
-    var apiUrl = getAlphaVantageURL(selectedTimeframe, selectedStock);
-    axios.get(apiUrl)
-      .then(response => {
-        console.log("Response Data:", response.data);
-        // Parse CSV data using PapaParse
-        const parsedData = Papa.parse(response.data, {
-          header: true,
-          skipEmptyLines: true,
-        }).data;
-
-        // Parse dates using Moment.js
-        parsedData.forEach(row => {
-          row.time = moment(row.date, "D/MM/YYYY").toDate();
-          delete row.date;
-        });
-
-        // Convert the parsed data into DataFrame-like structure
-        const inputSeries = parsedData.reduce((series, row) => {
-          series.push(row);
-          return series;
-        }, []);
-
-        // Calculate Simple Moving Average(SMA)
-        function sma(series, period) {
-          const smaValues = [];
-          for (let i = 0; i < series.length - period + 1; i++) {
-            const sum = series.slice(i, i + period).reduce((acc, row) => acc + parseFloat(row.close), 0);
-
-            const sma = sum / period;
-            smaValues.push(sma);
-          }
-          return smaValues;
-        }
-
-        //const closingPrices = inputSeries.map(row => parseFloat(row.close));
-        const movingAverage = sma(inputSeries, period); // 30 day moving average
-
-        // Integrate moving average indexed on date.
-        inputSeries.forEach((row, index) => {
-            if (index > (period - 2)) {
-                row.sma = movingAverage[index - (period - 1)];
-            }
-        });
-
-        // Calculate Mean and Standard Deviation of closing prices
-        function calculateMeanAndStdDev(series) {
-          const mean = series.reduce((acc, value) => acc + value, 0) / series.length;
-          const squaredDeviations = series.map(value => Math.pow(value - mean, 2));
-          const variance = squaredDeviations.reduce((acc, value) => acc + value, 0) / series.length;
-          const stdDev = Math.sqrt(variance);
-          return { mean, stdDev };
-        }
-
-        // Apply Mean-Reversion Strategy and simulate with initial amount $10000
-        function meanReversionStrategySimulation(inputSeries, period, zScoreThreshold, initialAmount) {
-          const closingPrices = inputSeries.map(row => parseFloat(row.close));
-          const smaValues = sma(inputSeries, period);
-          const { mean, stdDev } = calculateMeanAndStdDev(closingPrices);
-
-          const zScores = closingPrices.map((price, index) => {
-            if (index > (period - 2)) {
-                return (price - smaValues[index - (period - 1)]) / stdDev
-            }
-          });
-          console.log(zScores);
-
-          let currentBalance = initialAmount;
-          let currentStocks = 0;
-          const signals = [];
-          for (let i = 0; i < zScores.length; i++) {
-            if (zScores[i] > zScoreThreshold) {
-              // Sell signal, sell all stocks
-              currentBalance += currentStocks * closingPrices[i];
-              currentStocks = 0;
-              signals.push("SELL");
-            } else if (zScores[i] < -1 * zScoreThreshold) {
-              // Buy signal, buy with available balance
-              currentStocks += Math.floor(currentBalance / closingPrices[i]);
-              currentBalance -= Math.floor(currentBalance / closingPrices[i]) * closingPrices[i];
-              signals.push("BUY");
-            } else {
-              // Hold signal, do nothing
-              signals.push("HOLD");
-            }
-          }
-
-          // Calculate the final amount and profit
-          const finalAmount = currentBalance + currentStocks * closingPrices[closingPrices.length - 1];
-          const profitPercentage = ((finalAmount - initialAmount) / initialAmount) * 100;
-
-          return { signals, finalAmount, profitPercentage };
-        }
-
-        const simulationResult = meanReversionStrategySimulation(inputSeries, period, zScoreThreshold, initialAmount);
-        const finalAmount = simulationResult.finalAmount;
-        const profitPercentage = simulationResult.profitPercentage;
-        console.log(simulationResult.signals);
-        console.log("Final Amount: $" + finalAmount.toFixed(2));
-        console.log("Profit Percentage: " + profitPercentage.toFixed(2) + "%");
-
-        // Update the simulation result to the user
-        const resultDiv = document.getElementById('simulation-result');
-        resultDiv.innerHTML = `
-            <p>Initial Amount: $${initialAmount.toFixed(2)}</p>
-            <p>Final Amount: $${finalAmount.toFixed(2)}</p>
-            <p>Profit/Loss Percentage: ${profitPercentage.toFixed(2)}%</p>
-        `;
-      })
-      .catch(error => {
-        console.error("Error fetching data from AlphaVantage:", error);
-        // Display an error message to the user
-        const resultDiv = document.getElementById('simulation-result');
-        resultDiv.innerHTML = "Error fetching data. Please try again later.";
-      });
-
-
-});
 
 // window.addEventListener('beforeunload', () => {
 //     sessionStorage.clear();

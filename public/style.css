@@ -93,6 +93,12 @@ body {
 }
 
 
+/* Dashboard */
+.tab-content #dashboard .backtest-window .unactive.backtest {
+    display: none;
+}
+
+
 
 /* Portfolio */
 .tab-content #portfolio .portfolio-container {
