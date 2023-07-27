@@ -429,7 +429,7 @@ if (tabs) {
                 currGuide.classList.remove('unactive');
                 currGuide.classList.add('active');
             }
-            if (tab.id == "sidebar-button-dashboard") {
+            if (tab.id == "sidebar-button-backtesting") {
                 const backtests = document.querySelectorAll('[backtest-content]');
                 backtests.forEach(backtest => {
                     backtest.classList.remove('active');

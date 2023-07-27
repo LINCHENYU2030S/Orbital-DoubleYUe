@@ -538,7 +538,7 @@ body {
 /* Backtest */
 
 /* *********************************************************************************** */
-.tab-content #dashboard {
+.tab-content #backtesting {
     font-size: 40px;
     color: aliceblue;
 
@@ -553,13 +553,13 @@ body {
     border: 2px solid #00fbff;
     overflow: auto;
 } 
-.tab-content #dashboard .backtest-window .unactive[backtest-content] {
+.tab-content #backtesting .backtest-window .unactive[backtest-content] {
     display: none;
 }
-.tab-content #dashboard .backtest-window .active[backtest-content] {
+.tab-content #backtesting .backtest-window .active[backtest-content] {
     display: block;
 }
-.tab-content #dashboard .backtest-window [backtest-content] .partt {
+.tab-content #backtesting .backtest-window [backtest-content] .partt {
     font-size: 20px;
     position: absolute;
     top: 30px;
@@ -568,7 +568,7 @@ body {
     text-align: center;
     /* background-color: red; */
 }
-.tab-content #dashboard .backtest-window [backtest-content] .titlee {
+.tab-content #backtesting .backtest-window [backtest-content] .titlee {
     font-size: 40px;
     position: absolute;
     top: 70px;
@@ -577,7 +577,7 @@ body {
     text-align: center;
     /* background-color: red; */
 }
-.tab-content #dashboard .backtest-window [backtest-content] .contentt {
+.tab-content #backtesting .backtest-window [backtest-content] .contentt {
     font-size: 30px;
     position: absolute;
     top: 130px;
@@ -586,27 +586,27 @@ body {
     /* text-align: center; */
     /* background-color: red; */
 }
-.tab-content #dashboard .backtest-window #backtest-back-button {
+.tab-content #backtesting .backtest-window #backtest-back-button {
     position: absolute;
     left: 40px;
     bottom: 40px;
 }
-.tab-content #dashboard .backtest-window #backtest-next-button {
+.tab-content #backtesting .backtest-window #backtest-next-button {
     position: absolute;
     right: 40px;
     bottom: 40px;
 }
-.tab-content #dashboard .backtest-window [backtest-buttons] {
+.tab-content #backtesting .backtest-window [backtest-buttons] {
     font-size: 30px;
     font-family: 'Times New Roman', Times, serif;
     padding: 5px 20px;
     background-color: none;
     border: 2px solid white;
 }
-.tab-content #dashboard .backtest-window [backtest-buttons]:hover {
+.tab-content #backtesting .backtest-window [backtest-buttons]:hover {
     cursor: pointer;
     background-color: rgb(255, 255, 255, 0.5);
 }
-.tab-content #dashboard .backtest-window [backtest-buttons]:active {
+.tab-content #backtesting .backtest-window [backtest-buttons]:active {
     background-color: rgb(255, 255, 255, 0.9);
 }
