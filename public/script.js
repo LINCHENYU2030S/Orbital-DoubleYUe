@@ -41,6 +41,7 @@ const db = getFirestore(app);
 const alphaVantageAPIKey = "D5AVFFFTC6HG8HKJ";
 
 // TAB NAVIGATION
+let k = 1;
 let i = 1;
 const tabs = document.querySelectorAll('[data-tab-target]');
 const tabContents = document.querySelectorAll('[data-tab-content]');
@@ -474,6 +475,18 @@ if (tabs) {
                 currGuide.classList.remove('unactive');
                 currGuide.classList.add('active');
             }
+            if (tab.id == "sidebar-button-dashboard") {
+                const backtests = document.querySelectorAll('[backtest-content]');
+                backtests.forEach(backtest => {
+                    backtest.classList.remove('active');
+                    backtest.classList.add('unactive');
+                });
+
+                k = 1;
+                const currBacktest = document.getElementById('backtest-' + k);
+                currBacktest.classList.remove('unactive');
+                currBacktest.classList.add('active');
+            }
         });
     });
 }
@@ -826,6 +839,38 @@ if (backBtn) {
 }
 
 /* Backtesting */
+const nextButton = document.getElementById('backtest-next-button');
+const backButton = document.getElementById('backtest-back-button');
+
+if (nextButton) {
+    nextButton.addEventListener('click', () => {
+        const currBacktest = document.getElementById('backtest-' + k);
+        console.log(k);
+        if (k < 6) {
+            currBacktest.classList.remove('active');
+            currBacktest.classList.add('unactive');
+            k = k + 1;
+            const nextBacktest = document.getElementById('backtest-' + k);
+            nextBacktest.classList.remove('unactive');
+            nextBacktest.classList.add('active');
+        }
+    });
+}
+if (backButton) {
+    backButton.addEventListener('click', () => {
+        const currBacktest = document.getElementById('backtest-' + k);
+        console.log(k);
+        if (k > 1) {
+            currBacktest.classList.remove('active');
+            currBacktest.classList.add('unactive');
+            k = k - 1;
+            const nextBacktest = document.getElementById('backtest-' + k);
+            nextBacktest.classList.remove('unactive');
+            nextBacktest.classList.add('active');
+        }
+    });
+}
+
 $("#mean-reversion").click(function() {
     // Parameters from users
     const selectedStock = $("#search-input").val();

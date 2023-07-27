@@ -39,25 +39,101 @@
     <div class="tab-content">
         
         <div id="dashboard" data-tab-content class="active">
-            <label for="search-input">Stock: </label>
-                <input option-box type="text" id="search-input" placeholder="Search for a stock" autocomplete="off" required>
-            <div>
-                <label for="time-frame">Time Frame: </label>
-                <select option-box id="time-frame" placeholder="Select a Time Frame" required>
-                    <option value="" disabled selected hidden>Select a time frame</option>
-                    <option value="TIME_SERIES_INTRADAY">15 min</option>
-                    <option value="TIME_SERIES_DAILY_ADJUSTED">Day</option>
-                    <option value="TIME_SERIES_WEEKLY">Week</option>
-                    <option value="TIME_SERIES_MONTHLY">Month</option>
-                </select>
-            </div>
-            <label for="mean-reversionperiod">SMA Period for mean-reversion: </label>
-            <input type="text" id="mean-reversionperiod" pattern="^\d+(\.\d+)?$" placeholder="SMA period for mean-reversion" required>
-            <label for="mean-reversionzthreshold">zScoreThreshold for mean-reversion: </label>
-            <input type="text" id="mean-reversionzthreshold" pattern="^\d+(\.\d+)?$" placeholder="zthreshold for mean-reversion" required>
-            <button id="mean-reversion">Backtest with mean-reversion</button>
-            <div id="simulation-result">
+            <div class="backtest-window">
 
+                <div id="backtest-1" class="unactive backtest" backtest-content>
+                    <div class="partt">
+                        Strategy 1
+                    </div>
+                    <div class="titlee">
+                        Mean-reversion Strategy
+                    </div><br>
+                    <div class="contentt">
+                        Trading, in simple terms, is the act of buying and selling financial instruments (like shares, forex and indices), in the hopes of making a profit from changes in their price movements.
+                    </div>
+                </div>
+                <div id="backtest-2" class="unactive backtest" backtest-content>
+                    <div class="partt">
+                        Strategy 1
+                    </div>
+                    <div class="titlee">
+                        Mean-reversion Strategy
+                    </div>
+                    <div class="contentt">
+                        <label for="search-input">Stock: </label>
+                        <input option-box type="text" id="search-input" placeholder="Search for a stock" autocomplete="off" required>
+                        <div>
+                            <label for="time-frame">Time Frame: </label>
+                            <select option-box id="time-frame" placeholder="Select a Time Frame" required>
+                                <option value="" disabled selected hidden>Select a time frame</option>
+                                <option value="TIME_SERIES_INTRADAY">15 min</option>
+                                <option value="TIME_SERIES_DAILY_ADJUSTED">Day</option>
+                                <option value="TIME_SERIES_WEEKLY">Week</option>
+                                <option value="TIME_SERIES_MONTHLY">Month</option>
+                            </select>
+                        </div>
+                        <label for="mean-reversionperiod">SMA Period for mean-reversion: </label>
+                        <input type="text" id="mean-reversionperiod" pattern="^\d+(\.\d+)?$" placeholder="SMA period for mean-reversion" required>
+                        <label for="mean-reversionzthreshold">zScoreThreshold for mean-reversion: </label>
+                        <input type="text" id="mean-reversionzthreshold" pattern="^\d+(\.\d+)?$" placeholder="zthreshold for mean-reversion" required>
+                        <button id="mean-reversion">Backtest with mean-reversion</button>
+                        <div id="simulation-result">
+
+                        </div>
+                    </div>
+                </div>
+                <div id="backtest-3" class="unactive backtest" backtest-content>
+                    <div class="partt">
+                        Strategy 2
+                    </div>
+                    <div class="titlee">
+                        Why should we need a Trading Simulator?
+                    </div>
+                    <div class="contentt">
+                        A trading simulator allows you to hone your skills and develop strategies about trading without risking actual money.
+                    </div>
+                </div>
+                <div id="backtest-4" class="unactive backtest" backtest-content>
+                    <div class="partt">
+                        Strategy 2
+                    </div>
+                    <div class="titlee">
+                        Leverage
+                    </div>
+                    <div class="contentt">
+                        Leverage in trading enables you to open a position worth much more than the money you deposit. (For example, a 1: 100 leverage means for every $1 in your balance, you can trade up to $100)
+                    </div>
+                </div>
+                <div id="backtest-5" class="unactive backtest" backtest-content>
+                    <div class="partt">
+                        Strategy 3
+                    </div>
+                    <div class="titlee">
+                        Margin
+                    </div>
+                    <div class="contentt">
+                        A small deposit that can be used to control a large amount of an asset. We call this deposit: standard margin or initial margin. This is the absolute minimum you need in your account to open and maintain a position. 
+                    </div>
+                </div>
+                <div id="backtest-6" class="unactive backtest" backtest-content>
+                    <div class="partt">
+                        Strategy 3
+                    </div>
+                    <div class="titlee">
+                        Market Volatility
+                    </div>
+                    <div class="contentt">
+                        Market volatility is the frequency and magnitude of price movements, up or down. The bigger and more frequent the price swings, the more volatile the market is said to be.
+                    </div>
+                </div>
+                
+                <div id="backtest-next-button" backtest-buttons>
+                    Next
+                </div>
+
+                <div id="backtest-back-button" backtest-buttons>
+                    Back
+                </div>
             </div>
         </div>
 
