@@ -75,6 +75,7 @@ const backBtn = document.getElementById('guide-back-button');
 
 
 
+
 function getStockDocRef(docId) {
     return doc(db, userEmail, "Portfolio", "Stocks", docId);
 }
@@ -88,7 +89,23 @@ function getAlphaVantageURL(timeFrame, stockSymbol) {
     return url;
 }
 
+async function updateTotalProfitLoss(totalProfitLoss) {
+    await updateDoc(doc(db, userEmail, "Portfolio"), {
+        "totalProfitLoss": totalProfitLoss
+    });
+    totalProfitLossElement.innerHTML = "$" + totalProfitLoss.toFixed(4); 
+    console.log("totalProfitLoss: " + totalProfitLoss);
 
+
+    if (totalProfitLoss > 0) {
+        totalProfitLossElement.style.color = "rgb(0, 255, 0)";
+    } else if (totalProfitLoss < 0) {
+        totalProfitLossElement.style.color = 'rgb(255, 0, 0)';
+    } else {
+        totalProfitLossElement.style.color = '#000000';
+    }
+
+}
 
 async function initializeAndUpdateUser() {
     // Get User Current Portfolio Balance
@@ -99,7 +116,7 @@ async function initializeAndUpdateUser() {
     numOfStocks = docData.numOfStocks;
     prevNumOfStocks = numOfStocks;
     balanceElement.innerHTML = "Balance: $" + balance;
-    totalProfitLossElement.innerHTML = "$" + Number(docData.totalProfitLoss); 
+    
     console.log("user current balance is " + balance);
 }
 async function initializePortfolioTable() {
@@ -187,7 +204,9 @@ async function initializePortfolioTable() {
                         profitLoss = Number(profitLoss).toFixed(4);
                         cells[7].innerHTML = profitLoss;
 
-                        totalProfitLoss += profitLoss;
+                        totalProfitLoss += Number(profitLoss);
+
+                        console.log("totalProfitLoss: " + totalProfitLoss);
 
                         if (profitLoss > 0) {
                             cells[7].style.color = '#008000';
@@ -256,13 +275,15 @@ async function initializePortfolioTable() {
                 cells[5].innerHTML = Number(docData.price).toFixed(4);
                 cells[6].innerHTML = currentPrice.toFixed(4);
                 let profitLoss = (docData.type == "Long") 
-                    ? (docData.size * (currentPrice - docData.price)).toFixed(4)
-                    : (docData.size * (docData.price - currentPrice)).toFixed(4);
+                    ? (docData.size * (currentPrice - docData.price))
+                    : (docData.size * (docData.price - currentPrice));
+                profitLoss = Number(profitLoss).toFixed(4);
                 cells[7].innerHTML = profitLoss;
 
-                profitLoss = Number(profitLoss);
+                totalProfitLoss += Number(profitLoss);
 
-                totalProfitLoss += profitLoss;
+                console.log("totalProfitLoss: " + totalProfitLoss);
+
                 if (profitLoss > 0) {
                     cells[7].style.color = '#008000';
                 } else if (profitLoss < 0) {
@@ -315,12 +336,7 @@ async function initializePortfolioTable() {
             
         });
 
-        (async () => {
-            await updateDoc(doc(db, userEmail, "Portfolio"), {
-                "totalProfitLoss": totalProfitLoss
-            })
-        })();
-
+        updateTotalProfitLoss(totalProfitLoss);
     });
 }
 async function login(email, password) {
@@ -337,6 +353,8 @@ async function login(email, password) {
                 await initializePortfolioTable();
             })
             .catch((error) => {
+                console.log("Sign in failed!");
+
                 const errorCode = error.code;
                 const errorMessage = error.message;
 
@@ -749,6 +767,7 @@ function logOut() {
     signOut(auth).then(() => {
         // Sign-out successful.
         alert('User logged out!');
+        sessionStorage.clear();
         localStorage.clear();
         window.location.replace("login.html");
     }).catch((error) => {
@@ -998,7 +1017,7 @@ $("#mean-reversion").click(function() {
 
 });
 
-/*window.addEventListener('beforeunload', () => {
-    sessionStorage.clear();
-    localStorage.clear();
-});*/
+// window.addEventListener('beforeunload', () => {
+//     sessionStorage.clear();
+//     localStorage.clear();
+// });
