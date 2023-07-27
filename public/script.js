@@ -607,6 +607,272 @@ $("#mean-reversion").click(function() {
 
 });
 
+// Moving Average CrossOver strategy
+$("#moving-average-crossover").click(function () {
+    // Parameters from users
+    const selectedStock = $("#search-input2").val();
+    const selectedTimeframe = $("#time-frame2").val();
+    const shortPeriod = parseFloat($("#short-period").val()); // Short-term period for the short-term SMA
+    const longPeriod = parseFloat($("#long-period").val()); // Long-term period for the long-term SMA
+    const initialAmount = 10000; // Initial amount in dollars
+  
+    // Fetch data from AlphaVantage API
+    var apiUrl = getAlphaVantageURL(selectedTimeframe, selectedStock);
+    axios
+      .get(apiUrl)
+      .then((response) => {
+        console.log("Response Data:", response.data);
+        // Parse CSV data using PapaParse
+        const parsedData = Papa.parse(response.data, {
+          header: true,
+          skipEmptyLines: true,
+        }).data;
+  
+        // Parse dates using Moment.js
+        parsedData.forEach((row) => {
+          row.time = moment(row.date, "D/MM/YYYY").toDate();
+          delete row.date;
+        });
+  
+        // Convert the parsed data into DataFrame-like structure
+        const inputSeries = parsedData.reduce((series, row) => {
+          series.push(row);
+          return series;
+        }, []);
+  
+        // Calculate Simple Moving Average (SMA)
+        function sma(series, period) {
+          const smaValues = [];
+          for (let i = 0; i < series.length - period + 1; i++) {
+            const sum = series
+              .slice(i, i + period)
+              .reduce((acc, row) => acc + parseFloat(row.close), 0);
+  
+            const sma = sum / period;
+            smaValues.push(sma);
+          }
+          return smaValues;
+        }
+  
+        const shortSMA = sma(inputSeries, shortPeriod); // Short-term SMA
+        const longSMA = sma(inputSeries, longPeriod); // Long-term SMA
+  
+        // Integrate moving averages indexed on date.
+        inputSeries.forEach((row, index) => {
+          if (index > longPeriod - 2) {
+            row.shortSMA = shortSMA[index - (shortPeriod - 1)];
+            row.longSMA = longSMA[index - (longPeriod - 1)];
+          }
+        });
+  
+        // Apply Moving Average Crossover Strategy and simulate with initial amount $10000
+        function movingAverageCrossoverStrategySimulation(
+          inputSeries,
+          shortPeriod,
+          longPeriod,
+          initialAmount
+        ) {
+          let currentBalance = initialAmount;
+          let currentStocks = 0;
+          const signals = [];
+  
+          for (let i = 0; i < inputSeries.length; i++) {
+            if (i > longPeriod - 2) {
+              const currentRow = inputSeries[i];
+              const previousRow = inputSeries[i - 1];
+  
+              if (previousRow.shortSMA < previousRow.longSMA && currentRow.shortSMA >= currentRow.longSMA) {
+                // Golden Cross (Buy signal), buy with available balance
+                currentStocks += Math.floor(currentBalance / parseFloat(currentRow.close));
+                currentBalance -=
+                  Math.floor(currentBalance / parseFloat(currentRow.close)) *
+                  parseFloat(currentRow.close);
+                signals.push("BUY");
+              } else if (previousRow.shortSMA > previousRow.longSMA && currentRow.shortSMA <= currentRow.longSMA) {
+                // Death Cross (Sell signal), sell all stocks
+                currentBalance += currentStocks * parseFloat(currentRow.close);
+                currentStocks = 0;
+                signals.push("SELL");
+              } else {
+                // Hold signal, do nothing
+                signals.push("HOLD");
+              }
+            } else {
+              // Before having enough data for both short and long SMAs, just hold
+              signals.push("HOLD");
+            }
+          }
+  
+          // Calculate the final amount and profit
+          const finalAmount =
+            currentBalance + currentStocks * parseFloat(inputSeries[inputSeries.length - 1].close);
+          const profitPercentage = ((finalAmount - initialAmount) / initialAmount) * 100;
+  
+          return { signals, finalAmount, profitPercentage };
+        }
+  
+        const simulationResult = movingAverageCrossoverStrategySimulation(
+          inputSeries,
+          shortPeriod,
+          longPeriod,
+          initialAmount
+        );
+        const finalAmount = simulationResult.finalAmount;
+        const profitPercentage = simulationResult.profitPercentage;
+        console.log(simulationResult.signals);
+        console.log("Final Amount: $" + finalAmount.toFixed(2));
+        console.log("Profit Percentage: " + profitPercentage.toFixed(2) + "%");
+  
+        // Update the simulation result to the user
+        const resultDiv = document.getElementById("simulation-result2");
+        resultDiv.innerHTML = `
+            <p>Initial Amount: $${initialAmount.toFixed(2)}</p>
+            <p>Final Amount: $${finalAmount.toFixed(2)}</p>
+            <p>Profit/Loss Percentage: ${profitPercentage.toFixed(2)}%</p>
+        `;
+      })
+      .catch((error) => {
+        console.error("Error fetching data from AlphaVantage:", error);
+        // Display an error message to the user
+        const resultDiv = document.getElementById("simulation-result2");
+        resultDiv.innerHTML = "Error fetching data. Please try again later.";
+      });
+  });
+  
+  // Bollinger Bands Strategy
+  $("#bollinger-bands").click(function () {
+    // Parameters from users
+    const selectedStock = $("#search-input3").val();
+    const selectedTimeframe = $("#time-frame3").val();
+    const period = parseFloat($("#bollinger-period").val()); // Period for the SMA and standard deviation calculation
+    const numDeviations = parseFloat($("#bollinger-deviations").val()); // Number of standard deviations for Bollinger Bands
+    const initialAmount = 10000; // Initial amount in dollars
+  
+    // Fetch data from AlphaVantage API
+    var apiUrl = getAlphaVantageURL(selectedTimeframe, selectedStock);
+    axios
+      .get(apiUrl)
+      .then((response) => {
+        console.log("Response Data:", response.data);
+        // Parse CSV data using PapaParse
+        const parsedData = Papa.parse(response.data, {
+          header: true,
+          skipEmptyLines: true,
+        }).data;
+  
+        // Parse dates using Moment.js
+        parsedData.forEach((row) => {
+          row.time = moment(row.date, "D/MM/YYYY").toDate();
+          delete row.date;
+        });
+  
+        // Convert the parsed data into DataFrame-like structure
+        const inputSeries = parsedData.reduce((series, row) => {
+          series.push(row);
+          return series;
+        }, []);
+  
+        // Calculate Simple Moving Average (SMA)
+        function sma(series, period) {
+          const smaValues = [];
+          for (let i = 0; i < series.length - period + 1; i++) {
+            const sum = series
+              .slice(i, i + period)
+              .reduce((acc, row) => acc + parseFloat(row.close), 0);
+  
+            const sma = sum / period;
+            smaValues.push(sma);
+          }
+          return smaValues;
+        }
+  
+        // Calculate Standard Deviation of closing prices
+        function calculateStandardDeviation(series, mean) {
+          const squaredDeviations = series.map((value) => Math.pow(value - mean, 2));
+          const variance = squaredDeviations.reduce((acc, value) => acc + value, 0) / series.length;
+          return Math.sqrt(variance);
+        }
+  
+        const closingPrices = inputSeries.map((row) => parseFloat(row.close));
+        const smaValues = sma(inputSeries, period); // Simple Moving Average
+        const stdDev = calculateStandardDeviation(closingPrices, smaValues[period - 1]); // Standard Deviation
+  
+        // Calculate Bollinger Bands
+        const upperBands = smaValues.map((sma) => sma + numDeviations * stdDev);
+        const lowerBands = smaValues.map((sma) => sma - numDeviations * stdDev);
+  
+        // Integrate Bollinger Bands indexed on date.
+        inputSeries.forEach((row, index) => {
+          if (index > period - 2) {
+            row.upperBand = upperBands[index - (period - 1)];
+            row.lowerBand = lowerBands[index - (period - 1)];
+          }
+        });
+  
+        // Apply Bollinger Bands Strategy and simulate with initial amount $10000
+        function bollingerBandsStrategySimulation(inputSeries, initialAmount) {
+          let currentBalance = initialAmount;
+          let currentStocks = 0;
+          const signals = [];
+  
+          for (let i = 0; i < inputSeries.length; i++) {
+            if (i > period - 2) {
+              const currentRow = inputSeries[i];
+  
+              if (currentRow.close < currentRow.lowerBand) {
+                // Buy signal, buy with available balance
+                currentStocks += Math.floor(currentBalance / parseFloat(currentRow.close));
+                currentBalance -=
+                  Math.floor(currentBalance / parseFloat(currentRow.close)) *
+                  parseFloat(currentRow.close);
+                signals.push("BUY");
+              } else if (currentRow.close > currentRow.upperBand) {
+                // Sell signal, sell all stocks
+                currentBalance += currentStocks * parseFloat(currentRow.close);
+                currentStocks = 0;
+                signals.push("SELL");
+              } else {
+                // Hold signal, do nothing
+                signals.push("HOLD");
+              }
+            } else {
+              // Before having enough data for Bollinger Bands, just hold
+              signals.push("HOLD");
+            }
+          }
+  
+          // Calculate the final amount and profit
+          const finalAmount =
+            currentBalance + currentStocks * parseFloat(inputSeries[inputSeries.length - 1].close);
+          const profitPercentage = ((finalAmount - initialAmount) / initialAmount) * 100;
+  
+          return { signals, finalAmount, profitPercentage };
+        }
+  
+        const simulationResult = bollingerBandsStrategySimulation(inputSeries, initialAmount);
+        const finalAmount = simulationResult.finalAmount;
+        const profitPercentage = simulationResult.profitPercentage;
+        console.log(simulationResult.signals);
+        console.log("Final Amount: $" + finalAmount.toFixed(2));
+        console.log("Profit Percentage: " + profitPercentage.toFixed(2) + "%");
+  
+        // Update the simulation result to the user
+        const resultDiv = document.getElementById("simulation-result3");
+        resultDiv.innerHTML = `
+            <p>Initial Amount: $${initialAmount.toFixed(2)}</p>
+            <p>Final Amount: $${finalAmount.toFixed(2)}</p>
+            <p>Profit/Loss Percentage: ${profitPercentage.toFixed(2)}%</p>
+        `;
+      })
+      .catch((error) => {
+        console.error("Error fetching data from AlphaVantage:", error);
+        // Display an error message to the user
+        const resultDiv = document.getElementById("simulation-result3");
+        resultDiv.innerHTML = "Error fetching data. Please try again later.";
+      });
+  });
+  
+      
 
 
 // portfolioPart
@@ -1022,7 +1288,7 @@ if (backBtn) {
 
 
 
-window.addEventListener('beforeunload', () => {
+/*window.addEventListener('beforeunload', () => {
     sessionStorage.clear();
     localStorage.clear();
-});
+});*/

@@ -97,7 +97,7 @@
                         Mean-reversion Strategy
                     </div><br>
                     <div class="contentt">
-                        Trading, in simple terms, is the act of buying and selling financial instruments (like shares, forex and indices), in the hopes of making a profit from changes in their price movements.
+                        Mean-reversion is a trading strategy that operates on the premise that asset prices tend to revert to their historical average over time. The Simple Moving Average (SMA) is a key component of this strategy, representing the average price of the asset over a specific period, such as 30 days. The SMA period defines the time frame used to calculate the average. The z-score threshold determines the level of deviation from the SMA at which the strategy triggers a trade signal. If the z-score exceeds the threshold, indicating the asset is overbought or oversold, it generates a signal to either sell or buy, aiming to capitalize on potential price reversals back towards the historical mean.
                     </div>
                 </div>
                 <div id="backtest-2" class="unactive backtest" backtest-content>
@@ -135,10 +135,10 @@
                         Strategy 2
                     </div>
                     <div class="titlee">
-                        Why should we need a Trading Simulator?
+                        Moving Average Cross Over Strategy
                     </div>
                     <div class="contentt">
-                        A trading simulator allows you to hone your skills and develop strategies about trading without risking actual money.
+                        This strategy involves using two moving averages of different periods, such as a short-term moving average (e.g., 50-day SMA) and a long-term moving average (e.g., 200-day SMA). When the short-term moving average crosses above the long-term moving average, it generates a "Buy" signal, and when the short-term moving average crosses below the long-term moving average, it generates a "Sell" signal.
                     </div>
                 </div>
                 <div id="backtest-4" class="unactive backtest" backtest-content>
@@ -146,10 +146,29 @@
                         Strategy 2
                     </div>
                     <div class="titlee">
-                        Leverage
+                        Moving Average Cross Over Strategy
                     </div>
                     <div class="contentt">
-                        Leverage in trading enables you to open a position worth much more than the money you deposit. (For example, a 1: 100 leverage means for every $1 in your balance, you can trade up to $100)
+                        <label for="search-input2">Stock: </label>
+                        <input option-box type="text" id="search-input2" placeholder="Search for a stock" autocomplete="off" required>
+                        <div>
+                            <label for="time-frame2">Time Frame: </label>
+                            <select option-box id="time-frame2" placeholder="Select a Time Frame" required>
+                                <option value="" disabled selected hidden>Select a time frame</option>
+                                <option value="TIME_SERIES_INTRADAY">15 min</option>
+                                <option value="TIME_SERIES_DAILY_ADJUSTED">Day</option>
+                                <option value="TIME_SERIES_WEEKLY">Week</option>
+                                <option value="TIME_SERIES_MONTHLY">Month</option>
+                            </select>
+                        </div>
+                        <label for="short-period">SMA Short Period: </label>
+                        <input type="text" id="short-period" pattern="^\d+(\.\d+)?$" placeholder="Period for short SMA" required>
+                        <label for="long-period">SMA Long Period: </label>
+                        <input type="text" id="long-period" pattern="^\d+(\.\d+)?$" placeholder="Period for long SMA" required>
+                        <button id="moving-average-crossover">Backtest with Moving Average CrossOver Strategy</button>
+                        <div id="simulation-result2">
+
+                        </div>
                     </div>
                 </div>
                 <div id="backtest-5" class="unactive backtest" backtest-content>
@@ -157,10 +176,10 @@
                         Strategy 3
                     </div>
                     <div class="titlee">
-                        Margin
+                        Bollinger Bands Strategy
                     </div>
                     <div class="contentt">
-                        A small deposit that can be used to control a large amount of an asset. We call this deposit: standard margin or initial margin. This is the absolute minimum you need in your account to open and maintain a position. 
+                        Bollinger Bands consist of a middle line (usually a simple moving average) and two standard deviation lines above and below the middle line. The upper and lower bands act as dynamic resistance and support levels, respectively. When the price crosses above the upper band, it generates a "Sell" signal, and when the price crosses below the lower band, it generates a "Buy" signal.
                     </div>
                 </div>
                 <div id="backtest-6" class="unactive backtest" backtest-content>
@@ -168,10 +187,29 @@
                         Strategy 3
                     </div>
                     <div class="titlee">
-                        Market Volatility
+                        Bollinger Bands Strategy
                     </div>
                     <div class="contentt">
-                        Market volatility is the frequency and magnitude of price movements, up or down. The bigger and more frequent the price swings, the more volatile the market is said to be.
+                        <label for="search-input3">Stock: </label>
+                        <input option-box type="text" id="search-input3" placeholder="Search for a stock" autocomplete="off" required>
+                        <div>
+                            <label for="time-frame3">Time Frame: </label>
+                            <select option-box id="time-frame3" placeholder="Select a Time Frame" required>
+                                <option value="" disabled selected hidden>Select a time frame</option>
+                                <option value="TIME_SERIES_INTRADAY">15 min</option>
+                                <option value="TIME_SERIES_DAILY_ADJUSTED">Day</option>
+                                <option value="TIME_SERIES_WEEKLY">Week</option>
+                                <option value="TIME_SERIES_MONTHLY">Month</option>
+                            </select>
+                        </div>
+                        <label for="bollinger-period">Bollinger Period: </label>
+                        <input type="text" id="bollinger-period" pattern="^\d+(\.\d+)?$" placeholder="Period for the SMA and standard deviation calculation" required>
+                        <label for="bollinger-deviations">num of standard deviations for Bollinger Bands: </label>
+                        <input type="text" id="bollinger-deviations" pattern="^\d+(\.\d+)?$" placeholder="Std for Bollinger Bands" required>
+                        <button id="bollinger-bands">Backtest with Bollinger Band Strategy</button>
+                        <div id="simulation-result3">
+
+                        </div>
                     </div>
                 </div>
                 
