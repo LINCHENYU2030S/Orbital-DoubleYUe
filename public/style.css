@@ -583,6 +583,8 @@ body {
     top: 130px;
     left: 100px;
     right: 100px;
+    max-height: 290px;
+    overflow: auto;
     /* text-align: center; */
     /* background-color: red; */
 }
