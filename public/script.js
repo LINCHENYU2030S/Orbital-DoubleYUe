@@ -102,7 +102,7 @@ async function updateTotalProfitLoss(totalProfitLoss) {
     } else if (totalProfitLoss < 0) {
         totalProfitLossElement.style.color = 'rgb(255, 0, 0)';
     } else {
-        totalProfitLossElement.style.color = '#000000';
+        totalProfitLossElement.style.color = '#FFFFFF';
     }
 
 }
@@ -206,6 +206,8 @@ async function initializePortfolioTable() {
 
                         totalProfitLoss += Number(profitLoss);
 
+                        updateTotalProfitLoss(totalProfitLoss);
+
                         console.log("totalProfitLoss: " + totalProfitLoss);
 
                         if (profitLoss > 0) {
@@ -282,6 +284,8 @@ async function initializePortfolioTable() {
 
                 totalProfitLoss += Number(profitLoss);
 
+                updateTotalProfitLoss(totalProfitLoss);
+
                 console.log("totalProfitLoss: " + totalProfitLoss);
 
                 if (profitLoss > 0) {
@@ -336,7 +340,6 @@ async function initializePortfolioTable() {
             
         });
 
-        updateTotalProfitLoss(totalProfitLoss);
     });
 }
 async function login(email, password) {
