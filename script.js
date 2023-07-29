@@ -242,7 +242,7 @@ async function initializePortfolioTable() {
                         return;
                     } 
                     
-                    let currPrice = currentPrices[btn.id];
+                    let currPrice = localStorage.getItem(btn.id);
                     updateBalance(balance + sellSize * currPrice);
 
                             if (sellSize < docData.size) {
@@ -1291,7 +1291,7 @@ if (backBtn) {
 
 
 
-/*window.addEventListener('beforeunload', () => {
+window.addEventListener('beforeunload', () => {
     sessionStorage.clear();
     localStorage.clear();
-});*/
+});
