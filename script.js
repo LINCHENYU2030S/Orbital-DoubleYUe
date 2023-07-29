@@ -1292,6 +1292,7 @@ if (backBtn) {
 
 
 window.addEventListener('beforeunload', () => {
+    alert("unloading document");
     sessionStorage.clear();
     localStorage.clear();
 });
