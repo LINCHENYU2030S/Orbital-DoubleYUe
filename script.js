@@ -388,7 +388,7 @@ function checkAuth() {
         (async () => await login(sessionStorage.email, sessionStorage.password))();
     } else {
         alert("Please login first!");
-        window.location.replace("login.html");
+        window.location.replace("index.html");
     }
 }
 
@@ -1200,7 +1200,7 @@ function logOut() {
         alert('User logged out!');
         sessionStorage.clear();
         localStorage.clear();
-        window.location.replace("login.html");
+        window.location.replace("index.html");
     }).catch((error) => {
         // An error happened.
     });
