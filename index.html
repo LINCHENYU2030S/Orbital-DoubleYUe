@@ -45,8 +45,12 @@
 
         body .startTrading {
             position: relative;
-            margin: 0px 0px 0px 0px;
+            margin: 0;
             text-align: center;
+        }
+
+        #signin-form fieldset {
+            background-color: rgb(0, 0, 0, 0.8);
         }
 
         .input-container label {
@@ -69,7 +73,7 @@
 
         body .startTradingBtn {
             position: relative;
-            padding: 20px 100px 20px 100px;
+            padding: 20px 100px;
             font-family: 'Times New Roman', Times, serif;
             font-size: 30px;
             background-color:antiquewhite;
@@ -87,6 +91,12 @@
             padding: 10px 20px;
             border: none;
             border-radius: 4px;
+            text-decoration: none;
+            font-size: 25px;
+            font-family: 'Times New Roman', Times, serif;
+            width: 300px;
+            height: 50px;
+            /* font-weight: 20px; */
         }
         .custom-button:hover {
             cursor: pointer;
@@ -96,10 +106,13 @@
             background-color: rgb(230, 255, 255);
         }
 
-    
-
         .legend {
             color:antiquewhite;
+            font-size: 25px;
+        }
+
+        label {
+            font-size: 20px;
         }
 
 
@@ -109,11 +122,10 @@
         }
 
         .backbutton {
-            display: flex;
+            position: relative;
+            top: 10px;
             justify-content: center;
-            margin-top: 20px;
-            margin-left:40%;
-            margin-right:40%;
+            text-decoration: none;
         }
     }
 
@@ -128,7 +140,7 @@
             <fieldset>
                 <legend class = "legend">SIGN IN</legend>
                 <div class="input-container">
-                    <label for="email-signin">Email Address: </label>
+                    <label for="email-signin">Email address: </label>
                     <input id="email-signin" type="text" placeholder="Enter your email address" required>
 
                     <label for="password-signin">Your password: </label>
@@ -140,7 +152,7 @@
     </div>
     <div class = "back">
         <a href="signup.html" class = "backbutton">
-            <button class = "custom-button">Don't have an account? Sign Up here</button>
+            <button class = "custom-button">Create new account</button>
         </a>
     </div>
 

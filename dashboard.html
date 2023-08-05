@@ -109,7 +109,7 @@
                     </div>
                     <div class="contentt">
                         <label for="search-input">Stock: </label>
-                        <input option-box type="text" id="search-input" placeholder="Search for a stock" autocomplete="off" required>
+                        <input option-box type="text" id="search-input" placeholder="Search for a stock" autocomplete="off" required><br><br>
                         <div>
                             <label for="time-frame">Time Frame: </label>
                             <select option-box id="time-frame" placeholder="Select a Time Frame" required>
@@ -119,12 +119,14 @@
                                 <option value="TIME_SERIES_WEEKLY">Week</option>
                                 <option value="TIME_SERIES_MONTHLY">Month</option>
                             </select>
-                        </div>
-                        <label for="mean-reversionperiod">SMA Period for mean-reversion: </label>
-                        <input type="text" id="mean-reversionperiod" pattern="^\d+(\.\d+)?$" placeholder="SMA period for mean-reversion" required>
-                        <label for="mean-reversionzthreshold">zScoreThreshold for mean-reversion: </label>
-                        <input type="text" id="mean-reversionzthreshold" pattern="^\d+(\.\d+)?$" placeholder="zthreshold for mean-reversion" required>
-                        <button id="mean-reversion">Backtest with mean-reversion</button>
+                        </div><br>
+                        <label for="mean-reversionperiod">SMA Period: </label>
+                        <input type="text" id="mean-reversionperiod" pattern="^\d+(\.\d+)?$" placeholder="SMA period for mean-reversion" required><br><br>
+
+                        <label for="mean-reversionzthreshold">zScoreThreshold: </label>
+                        <input type="text" id="mean-reversionzthreshold" pattern="^\d+(\.\d+)?$" placeholder="zthreshold for mean-reversion" required><br><br>
+
+                        <button id="mean-reversion">Backtest with mean-reversion</button><br><br>
                         <div id="simulation-result">
 
                         </div>
@@ -150,7 +152,8 @@
                     </div>
                     <div class="contentt">
                         <label for="search-input2">Stock: </label>
-                        <input option-box type="text" id="search-input2" placeholder="Search for a stock" autocomplete="off" required>
+                        <input option-box type="text" id="search-input2" placeholder="Search for a stock" autocomplete="off" required><br><br>
+
                         <div>
                             <label for="time-frame2">Time Frame: </label>
                             <select option-box id="time-frame2" placeholder="Select a Time Frame" required>
@@ -160,12 +163,15 @@
                                 <option value="TIME_SERIES_WEEKLY">Week</option>
                                 <option value="TIME_SERIES_MONTHLY">Month</option>
                             </select>
-                        </div>
+                        </div><br>
+
                         <label for="short-period">SMA Short Period: </label>
-                        <input type="text" id="short-period" pattern="^\d+(\.\d+)?$" placeholder="Period for short SMA" required>
+                        <input type="text" id="short-period" pattern="^\d+(\.\d+)?$" placeholder="Period for short SMA" required><br><br>
+
                         <label for="long-period">SMA Long Period: </label>
-                        <input type="text" id="long-period" pattern="^\d+(\.\d+)?$" placeholder="Period for long SMA" required>
-                        <button id="moving-average-crossover">Backtest with Moving Average CrossOver Strategy</button>
+                        <input type="text" id="long-period" pattern="^\d+(\.\d+)?$" placeholder="Period for long SMA" required><br><br>
+
+                        <button id="moving-average-crossover">Backtest with Moving Average CrossOver Strategy</button><br><br>
                         <div id="simulation-result2">
 
                         </div>
@@ -191,7 +197,8 @@
                     </div>
                     <div class="contentt">
                         <label for="search-input3">Stock: </label>
-                        <input option-box type="text" id="search-input3" placeholder="Search for a stock" autocomplete="off" required>
+                        <input option-box type="text" id="search-input3" placeholder="Search for a stock" autocomplete="off" required><br><br>
+
                         <div>
                             <label for="time-frame3">Time Frame: </label>
                             <select option-box id="time-frame3" placeholder="Select a Time Frame" required>
@@ -201,12 +208,16 @@
                                 <option value="TIME_SERIES_WEEKLY">Week</option>
                                 <option value="TIME_SERIES_MONTHLY">Month</option>
                             </select>
-                        </div>
+                        </div><br>
+
                         <label for="bollinger-period">Bollinger Period: </label>
-                        <input type="text" id="bollinger-period" pattern="^\d+(\.\d+)?$" placeholder="Period for the SMA and standard deviation calculation" required>
-                        <label for="bollinger-deviations">num of standard deviations for Bollinger Bands: </label>
-                        <input type="text" id="bollinger-deviations" pattern="^\d+(\.\d+)?$" placeholder="Std for Bollinger Bands" required>
-                        <button id="bollinger-bands">Backtest with Bollinger Band Strategy</button>
+                        <input type="text" id="bollinger-period" pattern="^\d+(\.\d+)?$" placeholder="Period for the SMA and standard deviation calculation" required><br><br>
+
+                        <label for="bollinger-deviations">num of standard deviations: </label>
+                        <input type="text" id="bollinger-deviations" pattern="^\d+(\.\d+)?$" placeholder="Std for Bollinger Bands" required><br><br>
+
+                        <button id="bollinger-bands">Backtest with Bollinger Band Strategy</button><br><br>
+
                         <div id="simulation-result3">
 
                         </div>
@@ -224,7 +235,6 @@
         </div>
 
         <div id="trade" data-tab-content>
-            <!-- <h1>This is the Trade section</h1> -->
             <div class="trade-window">
                 <div class="title">Place Order</div>
                 <div class="options-container">
@@ -233,7 +243,6 @@
                         <label for="searchInput">Stock: </label>
                         <input option-box type="text" id="searchInput" placeholder="Search for a stock" autocomplete="off" required>
                         <ul id="searchResults"></ul>
-                        <!-- <select id="searchResults"></select> -->
 
                     </div>
                     <div trading-attr class="time">
@@ -250,18 +259,6 @@
                         <label for="trade-options-size">Size: </label>
                         <input option-box id="trade-options-size" type="number" placeholder="Enter a size">
                     </div>
-                    <!-- <div trading-attr class="price-option">
-                        <label for="trade-options-price">Price($): </label>
-                        <input option-box id="trade-options-price" type="number" placeholder="Enter purchase price">
-                    </div>
-                    <div trading-attr class="stoploss-option">
-                        <label for="trade-options-stoploss">Stop Loss($): </label>
-                        <input option-box id="trade-options-stoploss" type="number" placeholder="Enter stop loss">
-                    </div>
-                    <div trading-attr class="takeprofit-option">
-                        <label for="trade-options-takeprofit">Take Profit($): </label>
-                        <input option-box id="trade-options-takeprofit" type="number" placeholder="Enter take profit">
-                    </div> -->
                     <div trading-attr class="type-option">
                         <label for="stock-type">Type: </label>
                         <select option-box id="stock-type">
@@ -274,54 +271,7 @@
                     <div id="view-chart-button" class="trade-window-buttons">View Chart</div>
                     <div id="confirm-order-button" class="trade-window-buttons">Confirm</div>
                 </div>
-                <!-- <div id="view-chart-button" class="trade-window-buttons">View Chart</div>
-                <div id="confirm-order-button" class="trade-window-buttons">Confirm</div> -->
             </div>
-            <style>
-                #backtesting {
-                    padding: 20px;
-                    text-align: center;
-                }
-
-                #searchInput {
-                    width: 250px;
-                    padding: 10px;
-                    font-size: 16px;
-                    border: 1px solid #ccc;
-                    border-radius: 5px;
-                    margin-bottom: 10px;
-                }
-                #searchResults {
-                    list-style-type: none;
-                    padding: 0;
-                    margin: 0;
-                    position: fixed;
-                    left: 20%;
-                    right: 30%;
-                    top: 300px;
-                    text-align: left;
-                    z-index: 1;
-                }
-                #searchResults option {
-                    cursor: pointer;
-                    padding: 5px;
-                    font-size: 20px;
-                    color: white;
-                    background-color: rgb(0, 0, 0, 0.8);
-                    border: 1px solid white;
-                    width: 120%;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-                #searchResults option:hover {
-                    background-color: rgba(154, 154, 154, 0.8);  
-                    overflow: visible;
-                }
-
-                .active {
-                    display: block;
-                }
-            </style>
         </div>
 
         <div id="settings" data-tab-content>

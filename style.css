@@ -219,10 +219,89 @@ body {
 
 
 
+/* BackTesting */
+
+.tab-content #backtesting {
+    color: aliceblue;
+
+    position: absolute;
+    left: 30px;
+    right: 30px;
+    top: 16px;
+    bottom: 14px;
+
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 30px 40px;
+    border: 2px solid #00fbff;
+    overflow: auto;
+} 
+.tab-content #backtesting .backtest-window .unactive[backtest-content] {
+    display: none;
+}
+.tab-content #backtesting .backtest-window .active[backtest-content] {
+    display: block;
+}
+.tab-content #backtesting .backtest-window [backtest-content] .partt {
+    font-size: 20px;
+    position: absolute;
+    top: 30px;
+    left: 0px;
+    right: 0px;
+    text-align: center;
+    /* background-color: red; */
+}
+.tab-content #backtesting .backtest-window [backtest-content] .titlee {
+    font-size: 40px;
+    position: absolute;
+    top: 70px;
+    left: 0px;
+    right: 0px;
+    text-align: center;
+    /* background-color: red; */
+}
+.tab-content #backtesting .backtest-window [backtest-content] .contentt {
+    font-size: 25px;
+    position: absolute;
+    top: 130px;
+    left: 100px;
+    right: 100px;
+    max-height: 290px;
+    overflow: auto;
+    /* text-align: center; */
+    /* background-color: red; */
+}
+.tab-content #backtesting .backtest-window #backtest-back-button {
+    position: absolute;
+    left: 40px;
+    bottom: 40px;
+}
+.tab-content #backtesting .backtest-window #backtest-next-button {
+    position: absolute;
+    right: 40px;
+    bottom: 40px;
+}
+.tab-content #backtesting .backtest-window [backtest-buttons] {
+    font-size: 30px;
+    font-family: 'Times New Roman', Times, serif;
+    padding: 5px 20px;
+    background-color: none;
+    border: 2px solid white;
+}
+.tab-content #backtesting .backtest-window [backtest-buttons]:hover {
+    cursor: pointer;
+    background-color: rgb(255, 255, 255, 0.5);
+}
+.tab-content #backtesting .backtest-window [backtest-buttons]:active {
+    background-color: rgb(255, 255, 255, 0.9);
+}
+
+
+
+
+
 
 /* Trade */
 .tab-content #trade .trade-window {
-    font-size: 40px;
     position: absolute;
     left: 30px;
     right: 30px;
@@ -275,7 +354,32 @@ body {
 .tab-content #trade .trade-window .options-container [option-box]#searchInput {
     position: relative;
     left: 82.5px;
-    border: 2px solid white;
+}
+#searchResults {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    position: fixed;
+    left: 20%;
+    right: 30%;
+    top: 300px;
+    text-align: left;
+    z-index: 1;
+}
+#searchResults option {
+    cursor: pointer;
+    padding: 5px;
+    font-size: 20px;
+    color: white;
+    background-color: rgb(0, 0, 0, 0.8);
+    border: 1px solid white;
+    width: 120%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#searchResults option:hover {
+    background-color: rgba(154, 154, 154, 0.8);  
+    overflow: visible;
 }
 .tab-content #trade .trade-window .options-container [option-box]#trade-options-size {
     position: relative;
@@ -532,83 +636,5 @@ body {
     background-color: rgb(255, 255, 255, 0.5);
 }
 .tab-content #guide .guide-window [guide-buttons]:active {
-    background-color: rgb(255, 255, 255, 0.9);
-}
-
-/* Backtest */
-
-/* *********************************************************************************** */
-.tab-content #backtesting {
-    font-size: 40px;
-    color: aliceblue;
-
-    position: absolute;
-    left: 30px;
-    right: 30px;
-    top: 16px;
-    bottom: 14px;
-
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 30px 40px;
-    border: 2px solid #00fbff;
-    overflow: auto;
-} 
-.tab-content #backtesting .backtest-window .unactive[backtest-content] {
-    display: none;
-}
-.tab-content #backtesting .backtest-window .active[backtest-content] {
-    display: block;
-}
-.tab-content #backtesting .backtest-window [backtest-content] .partt {
-    font-size: 20px;
-    position: absolute;
-    top: 30px;
-    left: 0px;
-    right: 0px;
-    text-align: center;
-    /* background-color: red; */
-}
-.tab-content #backtesting .backtest-window [backtest-content] .titlee {
-    font-size: 40px;
-    position: absolute;
-    top: 70px;
-    left: 0px;
-    right: 0px;
-    text-align: center;
-    /* background-color: red; */
-}
-.tab-content #backtesting .backtest-window [backtest-content] .contentt {
-    font-size: 30px;
-    position: absolute;
-    top: 130px;
-    left: 100px;
-    right: 100px;
-    max-height: 290px;
-    overflow: auto;
-    /* text-align: center; */
-    /* background-color: red; */
-}
-.tab-content #backtesting .backtest-window #backtest-back-button {
-    position: absolute;
-    left: 40px;
-    bottom: 40px;
-}
-.tab-content #backtesting .backtest-window #backtest-next-button {
-    position: absolute;
-    right: 40px;
-    bottom: 40px;
-}
-.tab-content #backtesting .backtest-window [backtest-buttons] {
-    font-size: 30px;
-    font-family: 'Times New Roman', Times, serif;
-    padding: 5px 20px;
-    background-color: none;
-    border: 2px solid white;
-}
-.tab-content #backtesting .backtest-window [backtest-buttons]:hover {
-    cursor: pointer;
-    background-color: rgb(255, 255, 255, 0.5);
-}
-.tab-content #backtesting .backtest-window [backtest-buttons]:active {
     background-color: rgb(255, 255, 255, 0.9);
 }
