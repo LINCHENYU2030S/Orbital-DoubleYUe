@@ -229,21 +229,21 @@ async function initializePortfolioTable() {
                             const docSnap = await getDoc(docRef);
                             const docData = docSnap.data();
 
-                    // Popup sell window
-                    let sellSize = Number(prompt("Enter your selling size", ""));
-                    console.log(sellSize);
-                    if (isNaN(sellSize) || sellSize <= 0 || !Number.isInteger(sellSize)) {
-                        alert("Please Enter a Valid Positive Integer!");
-                        return;
-                    } 
-                    
-                    if (sellSize > docData.size) {
-                        alert("Sell size has exceeded current owned stock size!");
-                        return;
-                    } 
-                    
-                    let currPrice = localStorage.getItem(btn.id);
-                    updateBalance(balance + sellSize * currPrice);
+                            // Popup sell window
+                            let sellSize = Number(prompt("Enter your selling size", ""));
+                            console.log(sellSize);
+                            if (isNaN(sellSize) || sellSize <= 0 || !Number.isInteger(sellSize)) {
+                                alert("Please Enter a Valid Positive Integer!");
+                                return;
+                            } 
+                            
+                            if (sellSize > docData.size) {
+                                alert("Sell size has exceeded current owned stock size!");
+                                return;
+                            } 
+                            
+                            let currPrice = localStorage.getItem(btn.id);
+                            updateBalance(balance + sellSize * currPrice);
 
                             if (sellSize < docData.size) {
                                 const newSize = docData.size - sellSize;
@@ -258,6 +258,7 @@ async function initializePortfolioTable() {
                                 });
                                 await deleteDoc(docRef);
                             }
+                            
                         });
 
                     });
